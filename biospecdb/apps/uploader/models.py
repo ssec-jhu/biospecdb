@@ -2,10 +2,8 @@ from enum import StrEnum, auto
 import uuid
 
 from django.contrib.postgres.fields import ArrayField, HStoreField
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.utils.translation import gettext as _
 
 # Changes here need to be migrated, committed, and activated.
 # See https://docs.djangoproject.com/en/4.2/intro/tutorial02/#activating-models
@@ -82,7 +80,8 @@ class BioSample(models.Model):
         ZNSE = auto()
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="samples")
-    symptoms = models.ForeignKey(Symptoms, null=True, on_delete=models.SET_NULL, related_name="samples")  # SET_NULL | CASCADE?
+    # SET_NULL | CASCADE?
+    symptoms = models.ForeignKey(Symptoms, null=True, on_delete=models.SET_NULL, related_name="samples")
 
     # Sample meta.
     sample_type = models.CharField(default=SampleKind.PHARYNGEAL_SWAB, max_length=128, choices=SampleKind)
@@ -91,7 +90,8 @@ class BioSample(models.Model):
     thawing_time = models.IntegerField(blank=True, null=True)
 
     # Spectrometer meta.
-    spectra_measurement = models.CharField(default=SpectralMeasurementKind.ATR_FTIR, max_length=128, choices=SpectralMeasurementKind)
+    spectra_measurement = models.CharField(default=SpectralMeasurementKind.ATR_FTIR, max_length=128,
+                                           choices=SpectralMeasurementKind)
     spectrometer = models.CharField(default=Spectrometers.AGILENT_COREY_630, max_length=128, choices=Spectrometers)
     atr_crystal = models.CharField(default=SpectrometerCrystal.ZNSE, max_length=128, choices=SpectrometerCrystal)
     acquisition_time = models.IntegerField(blank=True, null=True)

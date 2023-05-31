@@ -34,7 +34,7 @@ def validate_age(value):
 class Symptoms(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="symptoms")
 
-    age = models.IntegerField(validators=[validate_age])
+    patient_age = models.IntegerField(validators=[validate_age])
     days_of_symptoms = models.IntegerField(default=0)  # DurationField?
 
     # Symptoms/Diseases

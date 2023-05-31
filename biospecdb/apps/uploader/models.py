@@ -1,3 +1,7 @@
+from enum import StrEnum, auto
+import uuid
+
+from django.contrib.postgres.fields import ArrayField, HStoreField
 from django.db import models
 
 # Changes here need to be migrated, committed, and activated.
@@ -9,33 +13,21 @@ from django.db import models
 # python manage.py sqlmigrate uploader <migration_version>
 
 
-class BioSample(models.Model):
-    # Sample meta.
-    sample_type = models.CharField(max_length=128)
-    sample_processing = models.CharField(max_length=128)
-    freezing_time = models.IntegerField(default=0)  # models.DateTimeField?
-    thawing_time = models.IntegerField(default=0)  # models.DateTimeField?
-
-    # Spectrometer meta.
-    spectra_measurment = models.CharField(max_length=128)
-    spectrometer = models.CharField(max_length=128)
-    atr_crystal = models.CharField(max_length=128)
-    acquisition_time = models.IntegerField(default=0)  # models.DateTimeField?
-    n_coadditions = models.IntegerField(default=0)
-    resolution = models.IntegerField(default=0)
-
-    # Spectral data.
-    wavelengths = models.IntegerField(default=0)
-    intensities = models.IntegerField(default=0)
-
-
 class Patient(models.Model):
-    patient_id = models.IntegerField(default=0, unique=True, primary_key=True)
+    class Gender(StrEnum):
+        MALE = auto()
+        FEMALE = auto()
+        # NA = auto()  # ?
 
-    # Meta
-    gender = models.CharField(max_length=1)
-    age = models.IntegerField(default=0)
-    days_of_symptoms = models.IntegerField(default=0)
+    patient_id = models.UUIDFIELD(unique=True, primary_key=True, default=uuid.uuid4, editable=False)
+    gender = models.CharField(max_length=1, choices=Gender)
+
+
+class Symptoms(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="symptoms")
+
+    age = models.IntegerField()
+    days_of_symptoms = models.IntegerField(default=0)  # DurationField?
 
     # Symptoms/Diseases
     fever = models.BooleanField(default=False)
@@ -58,5 +50,39 @@ class Patient(models.Model):
     diabetes = models.BooleanField(default=False)
     chronic_or_neuromuscular_neurological_disease = models.BooleanField(default=False)
 
-    # Sample meta data & spectral data.
-    data = models.ForeignKey(BioSample, on_delete=models.CASCADE)
+    more = HStoreField()
+
+
+class BioSample(models.Model):
+    class Spectrometers(StrEnum):
+        AGILENT_COREY_630 = auto()
+
+    class SpectralMeasurementKind(StrEnum):
+        ATR_FTIR = auto()
+
+    class SampleKind(StrEnum):
+        PHARYNGEAL_SWAB = auto()
+
+    class SpectrometerCrystal(StrEnum):
+        ZNSE = auto()
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="samples")
+    symptoms = models.ForeignKey(Symptoms, null=True, on_delete=models.SET_NULL, related_name="samples")  # SET_NULL | CASCADE?
+
+    # Sample meta.
+    sample_type = models.CharField(default=SampleKind.PHARYNGEAL_SWAB, max_length=128, choices=SampleKind)
+    sample_processing = models.CharField(default="None", max_length=128)
+    freezing_time = models.IntegerField(blank=True, null=True)
+    thawing_time = models.IntegerField(blank=True, null=True)
+
+    # Spectrometer meta.
+    spectra_measurement = models.CharField(default=SpectralMeasurementKind.ATR_FTIR, max_length=128, choices=SpectralMeasurementKind)
+    spectrometer = models.CharField(default=Spectrometers.AGILENT_COREY_630, max_length=128, choices=Spectrometers)
+    atr_crystal = models.CharField(default=SpectrometerCrystal.ZNSE, max_length=128, choices=SpectrometerCrystal)
+    acquisition_time = models.IntegerField(blank=True, null=True)
+    n_coadditions = models.IntegerField(default=32)
+    resolution = models.IntegerField(blank=True, null=True)
+
+    # Spectral data.
+    wavelengths = ArrayField(models.FloatField())
+    intensities = ArrayField(models.FloatField())

@@ -3,7 +3,9 @@ import uuid
 
 from django.contrib.postgres.fields import ArrayField, HStoreField
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils.translation import gettext as _
 
 # Changes here need to be migrated, committed, and activated.
 # See https://docs.djangoproject.com/en/4.2/intro/tutorial02/#activating-models
@@ -13,8 +15,14 @@ from django.db import models
 # python manage.py migrate
 # python manage.py sqlmigrate uploader <migration_version>
 
+POSITIVE = "positive"
+NEGATIVE = "negative"
+
 
 class Patient(models.Model):
+    MIN_AGE = 0
+    MAX_AGE = 150
+
     class Gender(StrEnum):
         MALE = auto()
         FEMALE = auto()
@@ -24,18 +32,17 @@ class Patient(models.Model):
     gender = models.CharField(max_length=1, choices=Gender)
 
 
-def validate_age(value):
-    min_age = 0
-    max_age = 150
-    if (value < min_age) or (value > max_age):
-        raise ValidationError(f"{min_age} < age < {max_age}, not '{value}'.")
-
-
 class Symptoms(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="symptoms")
 
-    patient_age = models.IntegerField(validators=[validate_age])
-    days_of_symptoms = models.IntegerField(default=0)  # DurationField?
+    patient_age = models.IntegerField(validators=[MinValueValidator(Patient.MIN_AGE),
+                                                  MaxValueValidator(Patient.MAX_AGE)])
+    days_of_symptoms = models.IntegerField(default=0, null=True)  # DurationField?
+
+    # SARS-CoV-2 (COVID) viral load indicators.
+    Ct_gene_N = models.FloatField()
+    Ct_gene_ORF1ab = models.FloatField()
+    Covid_RT_qPCR = models.CharField(default=NEGATIVE, choices=(NEGATIVE, POSITIVE))
 
     # Symptoms/Diseases
     fever = models.BooleanField(default=False)

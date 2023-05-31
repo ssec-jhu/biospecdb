@@ -2,6 +2,7 @@ from enum import StrEnum, auto
 import uuid
 
 from django.contrib.postgres.fields import ArrayField, HStoreField
+from django.core.exceptions import ValidationError
 from django.db import models
 
 # Changes here need to be migrated, committed, and activated.
@@ -23,10 +24,17 @@ class Patient(models.Model):
     gender = models.CharField(max_length=1, choices=Gender)
 
 
+def validate_age(value):
+    min_age = 0
+    max_age = 150
+    if (value < min_age) or (value > max_age):
+        raise ValidationError(f"{min_age} < age < {max_age}, not '{value}'.")
+
+
 class Symptoms(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="symptoms")
 
-    age = models.IntegerField()
+    age = models.IntegerField(validators=[validate_age])
     days_of_symptoms = models.IntegerField(default=0)  # DurationField?
 
     # Symptoms/Diseases

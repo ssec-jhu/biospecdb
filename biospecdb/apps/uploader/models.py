@@ -1,7 +1,6 @@
 from enum import StrEnum, auto
 import uuid
 
-from django.contrib.postgres.fields import ArrayField, HStoreField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -30,12 +29,69 @@ class Patient(models.Model):
     gender = models.CharField(max_length=1, choices=Gender)
 
 
+class BaseJSONType:
+    def to_dict(self):
+        return vars(self)
+
+
+class Symptom(BaseJSONType):
+    def __int__(self, name: str, symptomatic: bool, duration: int, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.symptomatic = symptomatic
+        self.duration = duration  # days
+
+
+class SymptomField(models.JSONField):
+    # TODO: Abstract most of this to base field class.
+
+    class Creator:
+        def __init__(self, field):
+            self.field = field
+
+        def __get__(self, obj):
+            if obj is None:
+                return self
+
+            return obj.__dict__(self.field.name)
+
+        def __set__(self, obj, value):
+            obj.__dict__[self.field.name] = self.convert_input(value)
+
+        def convert_input(self, value):
+            if value is None:
+                return None
+
+            if isinstance(value, Symptom):
+                return value
+            else:
+                return Symptom(**value)
+
+    def from_db_value(self, value, expression, connection):
+        db_val = super().from_db_value(value, expression, connection)
+
+        if db_val is None:
+            return db_val
+
+        return Symptom(**db_val)
+
+    def get_prep_value(self, value):
+        dict_value = value.to_dict()
+        prep_value = super().get_prep_value(dict_value)
+        return prep_value
+
+    def contribute_to_class(self, cls, name, private_only=False):
+        super().contribute_to_class(cls, name, private_only=private_only)
+        setattr(cls, self.name, self.Creator(self))
+
+
 class Symptoms(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="symptoms")
-
     patient_age = models.IntegerField(validators=[MinValueValidator(Patient.MIN_AGE),
                                                   MaxValueValidator(Patient.MAX_AGE)])
-    days_of_symptoms = models.IntegerField(default=0, null=True)  # DurationField?
+
+    # moved to BaseSymptom
+    # days_of_symptoms = models.IntegerField(default=0, null=True)  # DurationField?
 
     # SARS-CoV-2 (COVID) viral load indicators.
     Ct_gene_N = models.FloatField()
@@ -43,27 +99,27 @@ class Symptoms(models.Model):
     Covid_RT_qPCR = models.CharField(default=NEGATIVE, choices=(NEGATIVE, POSITIVE))
 
     # Symptoms/Diseases
-    fever = models.BooleanField(default=False)
-    dyspnoea = models.BooleanField(default=False)
-    oxygen_saturation_lt_95 = models.BooleanField(default=False)
-    cough = models.BooleanField(default=False)
-    coryza = models.BooleanField(default=False)
-    odinophagy = models.BooleanField(default=False)
-    diarrhea = models.BooleanField(default=False)
-    nausea = models.BooleanField(default=False)
-    headache = models.BooleanField(default=False)
-    weakness = models.BooleanField(default=False)
-    anosmia = models.BooleanField(default=False)
-    myalgia = models.BooleanField(default=False)
-    no_appetite = models.BooleanField(default=False)
-    vomiting = models.BooleanField(default=False)
-    suspicious_contact = models.BooleanField(default=False)
-    chronic_pulmonary_inc_asthma = models.BooleanField(default=False)
-    cardiovascular_disease_inc_hypertension = models.BooleanField(default=False)
-    diabetes = models.BooleanField(default=False)
-    chronic_or_neuromuscular_neurological_disease = models.BooleanField(default=False)
+    fever = SymptomField(default=False)
+    dyspnoea = SymptomField(default=False)
+    oxygen_saturation_lt_95 = SymptomField(default=False)
+    cough = SymptomField(default=False)
+    coryza = SymptomField(default=False)
+    odinophagy = SymptomField(default=False)
+    diarrhea = SymptomField(default=False)
+    nausea = SymptomField(default=False)
+    headache = SymptomField(default=False)
+    weakness = SymptomField(default=False)
+    anosmia = SymptomField(default=False)
+    myalgia = SymptomField(default=False)
+    no_appetite = SymptomField(default=False)
+    vomiting = SymptomField(default=False)
+    suspicious_contact = SymptomField(default=False)
+    chronic_pulmonary_inc_asthma = SymptomField(default=False)
+    cardiovascular_disease_inc_hypertension = SymptomField(default=False)
+    diabetes = SymptomField(default=False)
+    chronic_or_neuromuscular_neurological_disease = SymptomField(default=False)
 
-    more = HStoreField()
+    more = SymptomListField()  # TODO: Write this.
 
 
 class BioSample(models.Model):
@@ -98,6 +154,9 @@ class BioSample(models.Model):
     n_coadditions = models.IntegerField(default=32)
     resolution = models.IntegerField(blank=True, null=True)
 
+    qc_metrics = models.JSONField()
+
     # Spectral data.
-    wavelengths = ArrayField(models.FloatField())
-    intensities = ArrayField(models.FloatField())
+    # TODO: We could write a custom storage class to write these all to a parquet table instead of individual files.
+    # See https://docs.djangoproject.com/en/4.2/howto/custom-file-storage/
+    data = models.FileField(upload_to="uploads/")

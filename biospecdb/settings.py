@@ -83,8 +83,14 @@ WSGI_APPLICATION = 'biospecdb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        "OPTIONS": {
+            "service": "biospecdb_pg",
+            "passfile": ".biospecdb_pgpass",
+            "client_encoding": "UTF8",
+            "default_transaction_isolation": "read committed",
+            "timezone": "UTC"
+        },
     }
 }
 

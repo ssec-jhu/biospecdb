@@ -181,6 +181,11 @@ EXPLORER_DATA_EXPORTERS = [
 
 EXPLORER_SCHEMA_INCLUDE_VIEWS = True
 
+EXPLORER_TRANSFORMS = [
+    ('patient_id', '<a href="http://127.0.0.1:8000/admin/uploader/patient/{0}/change/">{0}</a>')
+]
+EXPLORER_UNSAFE_RENDERING = True
+
 
 # Custom settings:
 

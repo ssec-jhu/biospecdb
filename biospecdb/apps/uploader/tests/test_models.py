@@ -5,6 +5,7 @@ import django.core.files
 from django.db.utils import IntegrityError
 import pytest
 
+import biospecdb.util
 from uploader.models import BioSample, Disease, Instrument, Patient, SpectralData, Symptom, Visit, UploadedFile
 from uploader.loaddata import save_data_to_db
 
@@ -214,3 +215,21 @@ class TestUploadedFile:
         assert len(all_patients) == len(df)
         for index in df.index:
             assert all_patients.get(pk=index)
+
+    def test_patient_id_validation(self, tmp_path, db, diseases, django_db_blocker, instruments):
+        meta_data_path = (DATA_PATH / "meta_data").with_suffix(UploadedFile.FileFormats.XLSX)
+        n_patients = len(biospecdb.util.read_meta_data(meta_data_path).index)
+
+        # Generate a new spectral data file with patient IDs different from that in meta_data_path.
+        _data, filenames = biospecdb.util.mock_bulk_spectral_data(path=tmp_path, n_patients=n_patients)
+        spectral_file_path = filenames[0]
+
+        with django_db_blocker.unblock():
+            with meta_data_path.open(mode="rb") as meta_data:
+                with spectral_file_path.open(mode="rb") as spectral_data:
+                    data_upload = UploadedFile(meta_data_file=django.core.files.File(meta_data,
+                                                                                     name=meta_data_path.name),
+                                               spectral_data_file=django.core.files.File(spectral_data,
+                                                                                         name=spectral_file_path))
+                    with pytest.raises(ValidationError, match="Patient ID mismatch"):
+                        data_upload.clean()

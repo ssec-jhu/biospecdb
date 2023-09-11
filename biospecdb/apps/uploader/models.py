@@ -84,6 +84,13 @@ class UploadedFile(models.Model):
     @staticmethod
     def join_with_validation(meta_data, spec_data):
         """ Validate primary keys are unique and associative. """
+
+        if not meta_data.index.equals(spec_data.index):
+            raise ValidationError(_("Patient ID mismatch. IDs from %(a)s must exactly match all those from %(b)s"),
+                                  params=dict(a=UploadedFile.meta_data_file.field.name,
+                                              b=UploadedFile.spectral_data_file.field.name),
+                                  code="invalid")
+
         try:
             # The simplest way to do this is to utilize pandas.DataFrame.join().
             return meta_data.join(spec_data, how="left", validate="1:1")  # Might as well return the join.
@@ -361,7 +368,8 @@ class SpectralData(models.Model):
         data_file, ext = biospecdb.util.get_file_info(self.data)
         if ext != UploadedFile.FileFormats.CSV:
             raise NotImplementedError()
-        return biospecdb.util.spectral_data_from_csv(data_file)
+        data, patient_id = biospecdb.util.spectral_data_from_csv(data_file)
+        return data, patient_id,
 
     #@transaction.atomic  # Really? Not sure if this even can be if run in background...
     # See https://github.com/ssec-jhu/biospecdb/issues/77
@@ -399,6 +407,15 @@ class SpectralData(models.Model):
     def clean(self):
         """ Model validation. """
         super().clean()
+
+        # Check patient ID in supplied data file is correct.
+        expected_patient_id = str(self.bio_sample.visit.patient.patient_id)
+        _data, patient_id_from_file = self.get_spectral_df()
+        if patient_id_from_file != expected_patient_id:
+            raise ValidationError(_("Patient IDs don't match! Can't add spectral data for patient: '%(a)s' to"
+                                    "patient '%(b)s'"),
+                                  params=dict(a=expected_patient_id, b=patient_id_from_file),
+                                  code="invalid")
 
         # Compute QC metrics.
         # TODO: Even with the QC model being its own thing rather than fields here, we may still want to run here

@@ -18,7 +18,7 @@ class QcFilter(ABC):
 
 class QcSum(QcFilter):
     def run(self, spectral_data: "SpectralData"):  # noqa: F821
-        df = spectral_data.get_spectral_df()
+        df, _patient_id_from_file = spectral_data.get_spectral_df()
         res = df.sum(axis=0)["intensity"]
         return res
 

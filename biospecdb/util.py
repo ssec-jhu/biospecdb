@@ -1,8 +1,10 @@
+from datetime import datetime
 import enum
 import importlib
-from io import IOBase
+from io import IOBase, StringIO
 import os
 from pathlib import Path
+from uuid import UUID, uuid4
 
 import numpy as np
 import pandas as pd
@@ -11,6 +13,12 @@ import django.core.files
 import django.core.files.uploadedfile
 
 from . import __project__  # Keep as relative for templating reasons.
+
+
+# Values used when mocking spectral data.
+SPECTRAL_DATA_MAX_WAVELENGTH = 4000
+SPECTRAL_DATA_MIN_WAVELENGTH = 651
+SPECTRAL_DATA_N_BINS = 1798
 
 
 def find_package_location(package=__project__):
@@ -98,12 +106,49 @@ def read_spectral_data_table(file, ext=None):
     return pd.DataFrame({"wavelength": freqs, "intensity": specv}, index=cleaned_data["patient id"])
 
 
-def spectral_data_to_csv(file, wavelengths, intensities):
-    return pd.DataFrame(dict(intensity=intensities), index=wavelengths).rename_axis("wavelength").to_csv(file)
+def spectral_data_to_csv(file, patient_id, wavelengths, intensities):
+    df = pd.DataFrame(dict(intensity=intensities), index=wavelengths).rename_axis("wavelength")
+
+    patient_id_string = f"{spectral_data_to_csv.patient_id_string_prefix} {patient_id}\n"
+
+    if file is None:
+        # Creat str buffer, write to it, then return its contents.
+        with StringIO() as f:
+            f.write(patient_id_string)
+            df.to_csv(f)
+            return f.getvalue()
+    else:
+        if isinstance(file, django.core.files.File):
+            file = file.name
+
+        with open(file, mode='w') as f:
+            f.write(patient_id_string)
+            df.to_csv(f)
+
+
+spectral_data_to_csv.patient_id_string_prefix = f"# patient_id:"  # noqa: F541
 
 
 def spectral_data_from_csv(filename):
-    return pd.read_csv(filename)
+    if isinstance(filename, django.core.files.File):
+        filename = filename.name
+
+    with open(filename) as f:
+        patient_id = f.readline().split(":")
+
+    if len(patient_id) != 2:
+        raise ValueError(f"Expected: '{spectral_data_to_csv.patient_id_string_prefix }' at 1st line of file:"
+                         f"'{filename}'")
+
+    patient_id = patient_id[1].strip()
+
+    # NOTE: This call ``read_csv()`` needs to be down here because:
+    # Django seems to keep Files open, which can cause obvious (seek) issues when reading from the same file
+    # multiple times. Rather than explicitly close the file for this specific read, we just read after the above
+    # ``with`` automatically closes the file for us.
+    data = pd.read_csv(filename, header=1)
+
+    return data, patient_id
 
 
 def to_bool(value):
@@ -129,20 +174,36 @@ def to_bool(value):
 
 
 def mock_bulk_spectral_data(path=Path.home(),
-                            max_wavelength=4000,
-                            min_wavelength=651,
-                            n_bins=1798,
+                            max_wavelength=SPECTRAL_DATA_MAX_WAVELENGTH,
+                            min_wavelength=SPECTRAL_DATA_MIN_WAVELENGTH,
+                            n_bins=SPECTRAL_DATA_N_BINS,
                             n_patients=10):
     path = Path(path)
     data = pd.DataFrame(data=np.random.rand(n_patients, n_bins),
-                        columns=np.arange(max_wavelength, min_wavelength, (min_wavelength - max_wavelength) / n_bins))
+                        columns=np.arange(max_wavelength, min_wavelength, (min_wavelength - max_wavelength) / n_bins),
+                        index=[uuid4() for i in range(n_patients)])
     data.index.name = "PATIENT ID"
-    data.index += 1  # Make index 1 based.
+    # data.index += 1  # Make index 1 based.
 
-    data.to_excel(path / "spectral_data.xlsx")
-    data.to_csv(path / "spectral_data.csv")
+    filenames = (path / "spectral_data.xlsx", path / "spectral_data.csv")
+    data.to_excel(filenames[0])
+    data.to_csv(filenames[1])
 
-    return data
+    return data, filenames
+
+
+def mock_single_spectral_data_file(path=Path.home(),
+                                   patient_id=uuid4(),
+                                   max_wavelength=SPECTRAL_DATA_MAX_WAVELENGTH,
+                                   min_wavelength=SPECTRAL_DATA_MIN_WAVELENGTH,
+                                   n_bins=SPECTRAL_DATA_N_BINS):
+    path = Path(path)
+    wavelengths = np.arange(max_wavelength, min_wavelength, (min_wavelength - max_wavelength) / n_bins)
+    intensities = np.random.rand(n_bins)
+    filename = path / datetime.now().strftime("%m-%d-%Y-%H-%M")
+    filename = filename.with_suffix(".csv")
+    spectral_data_to_csv(file=filename, patient_id=patient_id, wavelengths=wavelengths, intensities=intensities)
+    return filename, patient_id
 
 
 def get_file_info(file_wrapper):
@@ -154,3 +215,14 @@ def get_file_info(file_wrapper):
     else:
         raise NotImplementedError(type(file_wrapper))
     return file, Path(file_wrapper.name).suffix
+
+
+def is_valid_uuid(value):
+    # This implementation was copied from django.db.models.UUIDField.to_python.
+    if value is not None and not isinstance(value, UUID):
+        input_form = "int" if isinstance(value, int) else "hex"
+        try:
+            return UUID(**{input_form: value})
+        except (AttributeError, ValueError):
+            False
+    return True

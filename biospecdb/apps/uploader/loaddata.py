@@ -40,8 +40,6 @@ def save_data_to_db(meta_data, spectral_data, joined_data=None):
             # int), however, '1' isn't. Here ``index`` is a string - and needs to be for UUIDs.
             patient = Patient.objects.get(pk=index)
         except (Patient.DoesNotExist, ValidationError):
-            # NOTE: We do not use the ``index`` read from file as the pk even if it is a UUID. The above ``get()`` only
-            # allows for existing patients to be re-used when _already_ in the db with their pk already auto-generated.
             patient = Patient(gender=Patient.Gender(row.get(Patient.gender.field.verbose_name.lower())),
                               patient_id=index)
             patient.full_clean()
@@ -79,7 +77,10 @@ def save_data_to_db(meta_data, spectral_data, joined_data=None):
         wavelengths = row["wavelength"]
         intensities = row["intensity"]
 
-        csv_data = biospecdb.util.spectral_data_to_csv(file=None, wavelengths=wavelengths, intensities=intensities)
+        csv_data = biospecdb.util.spectral_data_to_csv(file=None,
+                                                       patient_id=patient.patient_id,
+                                                       wavelengths=wavelengths,
+                                                       intensities=intensities)
         data_filename = Path(str(Visit)).with_suffix(str(UploadedFile.FileFormats.CSV))
 
         spectraldata = SpectralData(instrument=instrument,

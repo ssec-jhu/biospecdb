@@ -9,7 +9,6 @@ import biospecdb.util
 from uploader.models import BioSample, Disease, Instrument, Patient, SpectralData, Symptom, Visit, UploadedFile
 from uploader.loaddata import save_data_to_db
 
-import biospecdb.util
 from conftest import DATA_PATH
 
 

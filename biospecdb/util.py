@@ -183,7 +183,6 @@ def mock_bulk_spectral_data(path=Path.home(),
                         columns=np.arange(max_wavelength, min_wavelength, (min_wavelength - max_wavelength) / n_bins),
                         index=[uuid4() for i in range(n_patients)])
     data.index.name = "PATIENT ID"
-    # data.index += 1  # Make index 1 based.
 
     filenames = (path / "spectral_data.xlsx", path / "spectral_data.csv")
     data.to_excel(filenames[0])

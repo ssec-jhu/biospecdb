@@ -19,19 +19,21 @@ def fig_to_html(fig) -> str:
     return graph
 
 
-def count_bool_diseases(result: "QueryResult"):  # noqa: F821
-    if len(result.data) < 1:
+def count_bool_diseases(data, header_strings):  # noqa: F821
+    if len(data) < 1:
         return
 
     bool_diseases = [d.name for d in Disease.objects.all() if d.value_class == "BOOL"]
-    df = pd.DataFrame(result.data, columns=result.header_strings)
+    df = pd.DataFrame(data, columns=header_strings)
     df = df[bool_diseases].replace({"True": True, "False": False})
     return df.sum()
 
 
-def get_pie_chart(result: "QueryResult") -> Optional[str]:  # noqa: F821
+def get_pie_chart(result: "QueryResult", rows: int) -> Optional[str]:  # noqa: F821
+    data = result.data[:rows]
+
     try:
-        counts = count_bool_diseases(result)
+        counts = count_bool_diseases(data, result.header_strings)
 
         if counts is None:
             return
@@ -45,12 +47,14 @@ def get_pie_chart(result: "QueryResult") -> Optional[str]:  # noqa: F821
             return
 
 
-def get_line_chart(result: "QueryResult") -> Optional[str]:  # noqa: F821
-    if len(result.data) < 1:
+def get_line_chart(result: "QueryResult", rows: int) -> Optional[str]:  # noqa: F821
+    data = result.data[:rows]
+
+    if len(data) < 1:
         return
 
     try:
-        df = pd.DataFrame(result.data, columns=result.header_strings)
+        df = pd.DataFrame(data, columns=result.header_strings)
         df = df[[Patient.patient_id.field.name, SpectralData.data.field.name]]
 
         fig = go.Figure()

@@ -74,7 +74,7 @@ class TestExporters:
             assert set(data[SpectralData.data.field.name]) == set(spectral_data_files)
 
         for filename in spectral_data_files:
-            data = spectral_data_from_csv(filename)
+            data, _patient_id = spectral_data_from_csv(filename)
             assert set(data.columns) == {"wavelength", "intensity"}
             assert len(data) == 1798
 

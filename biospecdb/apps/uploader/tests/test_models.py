@@ -143,7 +143,23 @@ class TestBioSample:
 
 
 class TestSpectralData:
-    ...
+    @pytest.mark.parametrize("file_ext", UploadedFile.FileFormats.list())
+    def test_upload(self, mock_data_from_files, file_ext):
+        patient = Patient.objects.all()[0]
+        instrument = Instrument.objects.all()[0]
+        bio_sample = patient.visit.get().bio_sample.get()
+
+        spectral_file_path = (DATA_PATH / "sample").with_suffix(file_ext)
+        with spectral_file_path.open(mode="rb") as spectral_data:
+            spectral_data = SpectralData(instrument=instrument,
+                                         bio_sample=bio_sample,
+                                         data=django.core.files.File(spectral_data, name=spectral_file_path.name))
+
+            instrument.spectral_data.add(spectral_data, bulk=False)
+            bio_sample.spectral_data.add(spectral_data, bulk=False)
+
+            spectral_data.full_clean()
+            spectral_data.save()
 
 
 class TestUploadedFile:

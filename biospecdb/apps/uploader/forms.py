@@ -3,6 +3,8 @@ from django import forms
 from django.db import models
 
 from uploader.models import UploadedFile, Patient, SpectralData, Instrument, BioSample, Symptom, Disease, Visit
+
+import biospecdb.util
 from biospecdb.util import read_spectral_data_table, get_file_info
 from .loaddata import save_data_to_db
 
@@ -81,7 +83,7 @@ class DataInputForm(forms.Form):
             else:
                 data[key] = value
         data.pop("Spectral data file")  # This is not a part of meta data, so should be removed.
-        df = pd.DataFrame(data, index=[str(data[self.fields["patient_id"].label])])
+        df = pd.DataFrame(data, index=[biospecdb.util.to_uuid(data[self.fields["patient_id"].label])])
         canonic_data = df.rename(columns=lambda x: x.lower())
         return canonic_data
 

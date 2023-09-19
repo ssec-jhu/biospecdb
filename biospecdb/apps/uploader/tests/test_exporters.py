@@ -5,7 +5,7 @@ import pytest
 from explorer.tests.factories import SimpleQueryFactory
 from django.conf import settings
 
-from biospecdb.util import read_raw_data, spectral_data_from_csv
+from biospecdb.util import read_raw_data, read_individual_spectral_data
 from uploader.exporters import CSVExporter
 from uploader.models import SpectralData
 
@@ -74,7 +74,7 @@ class TestExporters:
             assert set(data[SpectralData.data.field.name]) == set(spectral_data_files)
 
         for filename in spectral_data_files:
-            data, _patient_id = spectral_data_from_csv(filename)
+            data, _patient_id = read_individual_spectral_data(filename)
             assert set(data.columns) == {"wavelength", "intensity"}
             assert len(data) == 1798
 

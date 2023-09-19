@@ -77,10 +77,10 @@ def save_data_to_db(meta_data, spectral_data, joined_data=None):
         wavelengths = row["wavelength"]
         intensities = row["intensity"]
 
-        csv_data = biospecdb.util.spectral_data_to_csv(file=None,
-                                                       patient_id=patient.patient_id,
-                                                       wavelengths=wavelengths,
-                                                       intensities=intensities)
+        csv_data = biospecdb.util.spectral_data_to_internal_file_format(file=None,
+                                                                        patient_id=patient.patient_id,
+                                                                        wavelengths=wavelengths,
+                                                                        intensities=intensities)
         data_filename = Path(str(Visit)).with_suffix(str(UploadedFile.FileFormats.CSV))
 
         spectraldata = SpectralData(instrument=instrument,

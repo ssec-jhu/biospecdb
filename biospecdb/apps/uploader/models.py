@@ -366,9 +366,7 @@ class SpectralData(models.Model):
 
     def get_spectral_df(self):
         data_file, ext = biospecdb.util.get_file_info(self.data)
-        if ext != UploadedFile.FileFormats.CSV:
-            raise NotImplementedError()
-        data, patient_id = biospecdb.util.spectral_data_from_csv(data_file)
+        data, patient_id = biospecdb.util.read_individual_spectral_data(data_file, ext=ext)
         return data, patient_id,
 
     #@transaction.atomic  # Really? Not sure if this even can be if run in background...
@@ -409,7 +407,7 @@ class SpectralData(models.Model):
         super().clean()
 
         # Check patient ID in supplied data file is correct.
-        expected_patient_id = str(self.bio_sample.visit.patient.patient_id)
+        expected_patient_id = self.bio_sample.visit.patient.patient_id
         _data, patient_id_from_file = self.get_spectral_df()
         if patient_id_from_file != expected_patient_id:
             raise ValidationError(_("Patient IDs don't match! Can't add spectral data for patient: '%(a)s' to"

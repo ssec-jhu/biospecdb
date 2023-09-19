@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from django.conf import settings
-from biospecdb.util import spectral_data_from_csv
+from biospecdb.util import read_individual_spectral_data
 from uploader.models import Disease, Patient, SpectralData
 
 
@@ -58,7 +58,7 @@ def get_line_chart(result: "QueryResult") -> Optional[str]:  # noqa: F821
                           yaxis_title="Intensity",
                           title=f"Spectral Data for SQL query: '{result.sql}'")
         for _, (patient_id, filename) in df.iterrows():
-            spectral_data, _patient_id = spectral_data_from_csv(filename)
+            spectral_data, _patient_id = read_individual_spectral_data(filename)
             fig.add_scatter(x=spectral_data["wavelength"],
                             y=spectral_data["intensity"],
                             name=patient_id)

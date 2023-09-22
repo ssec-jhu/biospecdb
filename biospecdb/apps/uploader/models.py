@@ -269,8 +269,17 @@ class Visit(DatedModel):
         return f"patient:{self.patient.short_id()}_visit:{self.visit_number}"
 
 
-class Disease(ModelWithViewDependency):
+class Observable(ModelWithViewDependency):
     """ Model an individual disease, symptom, or health condition. A patient's instance are stored as models.Symptom"""
+
+    class Category(TextChoices):
+        BLOODWORK = auto()
+        COMORBIDITY = auto()
+        DRUG = auto()
+        PATIENT_PREP = auto()
+        SYMPTOM = auto()
+        TEST = auto()
+        VITALS = auto()
 
     Types = Types
 
@@ -286,6 +295,7 @@ class Disease(ModelWithViewDependency):
     # NOTE: See above constraint for case-insensitive uniqueness.
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=256)
+    category = models.CharField(max_length=128, choices=Category.choices)
 
     # NOTE: See meta class constraint for case-insensitive uniqueness.
     alias = models.CharField(max_length=128,
@@ -307,7 +317,7 @@ class Disease(ModelWithViewDependency):
             self.alias = self.name.replace('_', ' ')
 
 
-class Symptom(DatedModel):
+class Observation(DatedModel):
     """ A patient's instance of models.Disease. """
 
     class Meta:
@@ -316,22 +326,21 @@ class Symptom(DatedModel):
     MIN_SEVERITY = 0
     MAX_SEVERITY = 10
 
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="symptom")
-    disease = models.ForeignKey(Disease, on_delete=models.CASCADE, related_name="symptom")
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="observation")
+    observable = models.ForeignKey(Observable, on_delete=models.CASCADE, related_name="observation")
 
-    days_symptomatic = models.IntegerField(default=None,
-                                           blank=True,
-                                           null=True,
-                                           validators=[MinValueValidator(0)],
-                                           verbose_name="Days of Symptoms onset")
+    days = models.IntegerField(default=None,
+                               blank=True,
+                               null=True,
+                               validators=[MinValueValidator(0)],
+                               verbose_name="Number of days with observed condition.")
     severity = models.IntegerField(default=None,
-                                   validators=[MinValueValidator(MIN_SEVERITY),
-                                                             MaxValueValidator(MAX_SEVERITY)],
+                                   validators=[MinValueValidator(MIN_SEVERITY), MaxValueValidator(MAX_SEVERITY)],
                                    blank=True,
                                    null=True)
 
-    # Str format for actual type/class spec'd by Disease.value_class.
-    disease_value = models.CharField(blank=True, null=True, default='', max_length=128)
+    # Str format for actual type/class spec'd by Observable.value_class.
+    value = models.CharField(blank=True, null=True, default='', max_length=128)
 
     def clean(self):
         """ Model validation. """
@@ -346,7 +355,7 @@ class Symptom(DatedModel):
         # NOTE: ``disease_value`` is a ``CharField`` so this will get cast back to a str again, and it could be argued
         # that there's no point in storing the cast value... but :shrug:.
         try:
-            self.disease_value = Disease.Types(self.disease.value_class).cast(self.disease_value)
+            self.disease_value = Observable.Types(self.disease.value_class).cast(self.disease_value)
         except ValueError:
             raise ValidationError(_("The value '%(value)s' can not be cast to the expected type of '%(type)s' for"
                                     " '%(disease_name)s'"),
@@ -542,10 +551,10 @@ class SymptomsView(SqlView, models.Model):
 
     visit_id = models.BigIntegerField(primary_key=True)
     symptom_id = models.ForeignKey(Symptom, db_column="symptom_id", on_delete=models.DO_NOTHING)
-    disease_id = models.ForeignKey(Disease, db_column="disease_id", on_delete=models.DO_NOTHING)
-    disease = deepcopy(Disease.name.field)
+    disease_id = models.ForeignKey(Observable, db_column="disease_id", on_delete=models.DO_NOTHING)
+    disease = deepcopy(Observable.name.field)
     disease.name = disease.db_column = "disease"
-    value_class = deepcopy(Disease.value_class.field)
+    value_class = deepcopy(Observable.value_class.field)
     days_symptomatic = deepcopy(Symptom.days_symptomatic.field)
     severity = deepcopy(Symptom.severity.field)
     disease_value = deepcopy(Symptom.disease_value.field)
@@ -580,7 +589,7 @@ class VisitSymptomsView(SqlView, models.Model):
 
     @classmethod
     def sql(cls):
-        diseases = Disease.objects.all()
+        diseases = Observable.objects.all()
         view = cls._meta.db_table
         d = []
         for disease in diseases:

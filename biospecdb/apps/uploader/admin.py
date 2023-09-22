@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models import Q
 import django.forms as forms
 
-from .models import BioSample, Disease, Instrument, Patient, SpectralData, Symptom, UploadedFile, Visit, QCAnnotator,\
+from .models import BioSample, Observable, Instrument, Patient, SpectralData, Symptom, UploadedFile, Visit, QCAnnotator,\
     QCAnnotation, Center, get_center, BioSampleType
 
 
@@ -135,7 +135,7 @@ class QCAnnotatorAdmin(RestrictedByCenterAdmin):
     list_display = ["name", "fully_qualified_class_name", "default", "value_type"]
 
 
-@admin.register(Disease)
+@admin.register(Observable)
 class DiseaseAdmin(RestrictedByCenterAdmin):
     search_fields = ["name"]
     search_help_text = "Disease name"

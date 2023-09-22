@@ -2,7 +2,9 @@ from io import IOBase
 from pathlib import Path
 
 import django.core.files
+from django.core.files.storage import FileSystemStorage
 import django.core.files.uploadedfile
+from django.utils.deconstruct import deconstructible
 import pandas as pd
 
 from biospecdb.util import StrEnum, to_uuid
@@ -112,3 +114,10 @@ def get_file_info(file_wrapper):
     if hasattr(file, "closed") and not file.closed and hasattr(file, "seek"):
         file.seek(0)
     return file, Path(file_wrapper.name).suffix
+
+
+@deconstructible(path="biospecdb.apps.uploader.io.SpectralDataFileStorage")
+class SpectralDataFileStorage(FileSystemStorage):
+    def _save(self, name, content):
+        saved_file_path = super()._save(name, content)
+        return saved_file_path

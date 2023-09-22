@@ -12,7 +12,8 @@ from django.utils.translation import gettext_lazy as _
 import pandas as pd
 
 from biospecdb.qc.qcfilter import QcFilter
-from uploader.io import FileFormats, get_file_info, read_meta_data, read_spectral_data_table, spectral_data_from_csv
+from uploader.io import FileFormats, get_file_info, read_meta_data, read_spectral_data_table, spectral_data_from_csv, \
+    SpectralDataFileStorage
 from uploader.loaddata import save_data_to_db
 from uploader.sql import secure_name
 from uploader.base_models import DatedModel, ModelWithViewDependency, SqlView, TextChoices, Types
@@ -342,7 +343,8 @@ class SpectralData(DatedModel):
     # See https://docs.djangoproject.com/en/4.2/howto/custom-file-storage/
     data = models.FileField(upload_to=UPLOAD_DIR,
                             validators=[FileExtensionValidator(UploadedFile.FileFormats.choices())],
-                            verbose_name="Spectral data file")
+                            verbose_name="Spectral data file",
+                            storage=SpectralDataFileStorage)
 
     def __str__(self):
         return f"{self.bio_sample.visit}_pk{self.pk}"

@@ -5,7 +5,7 @@ from django.db import models
 from biospecdb.util import to_uuid
 from uploader.io import read_spectral_data_table, get_file_info
 from uploader.models import UploadedFile, Patient, SpectralData, Instrument, BioSample, Symptom, Disease, Visit
-from .loaddata import save_data_to_db
+from .loaddata import save_data_to_db, update_db
 
 
 class FileUploadForm(forms.ModelForm):
@@ -128,4 +128,10 @@ class DataInputForm(forms.Form):
         # WARNING!: This func is NOT responsible for validation and self.is_valid() must be called first!
 
         # Ingest into DB.
-        save_data_to_db(None, None, center=self.request.user.center, joined_data=self.massage_data())
+        save_data_to_db(None, None, center=self.request.user.center, joined_data=self.massage_data())    
+
+    def update(self):
+        # WARNING!: This func is NOT responsible for validation and self.is_valid() must be called first!
+
+        # Update DB.
+        update_db(None, None, joined_data=self.massage_data())

@@ -45,9 +45,13 @@ def data_input(request):
         form = DataInputForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
-            form.save()  # Save data to database.
+            if amount of changed fields < total amount of fields:
+                form.update() # Update database with changed data
+                message = "Data Input with Patient ID {} has been submitted successfully!!!".format(patient_id)
+            else: # New entry
+                form.save()  # Save data to database.
+                message = "Data Input with Patient ID {} has been submitted successfully!!!".format(patient_id)
             patient_id = form.cleaned_data["patient_id"]
-            message = "Data Input with Patient ID {} has been submitted successfully!!!".format(patient_id)
             return render(request, 'DataInputForm.html', {'form': form, 'message': message, 'delta_count': delta_count})
         
     elif request.method == 'GET':

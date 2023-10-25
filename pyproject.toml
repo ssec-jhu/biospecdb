@@ -11,6 +11,7 @@ license = {file = "LICENSE"}
 requires-python = ">=3.11"
 dependencies = [
     "django",
+    "django-nested-inline",
     "django-sql-explorer[charts]",
     "kaleido",
     "openpyxl",

@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.db.models import Q
 from django.db.utils import OperationalError
 import django.forms as forms
+from nested_inline.admin import NestedStackedInline, NestedTabularInline, NestedModelAdmin
 
 from .models import BioSample, Observable, Instrument, Patient, SpectralData, Observation, UploadedFile, Visit,\
     QCAnnotator, QCAnnotation, Center, get_center, BioSampleType, SpectraMeasurementType
@@ -104,7 +105,7 @@ class UploadedFileAdmin(RestrictedByCenterMixin, admin.ModelAdmin):
         return qs.filter(center=Center.objects.get(pk=request.user.center.pk))
 
 
-class QCAnnotationInline(RestrictedByCenterMixin, admin.TabularInline):
+class QCAnnotationInline(RestrictedByCenterMixin, NestedTabularInline):
     model = QCAnnotation
     extra = 0
     min_num = 1
@@ -150,7 +151,7 @@ class QCAnnotatorAdmin(RestrictedByCenterMixin, admin.ModelAdmin):
 
 
 @admin.register(Observable)
-class ObservableAdmin(RestrictedByCenterMixin, admin.ModelAdmin):
+class ObservableAdmin(RestrictedByCenterMixin, NestedModelAdmin):
     readonly_fields = ["created_at", "updated_at"]  # TODO: Might need specific user group.
     ordering = ["name"]
     search_fields = ["name"]
@@ -201,7 +202,7 @@ class ObservationInlineForm(forms.ModelForm):
             pass
 
 
-class ObservationInline(ObservationMixin, RestrictedByCenterMixin, admin.TabularInline):
+class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabularInline):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
@@ -213,6 +214,7 @@ class ObservationInline(ObservationMixin, RestrictedByCenterMixin, admin.Tabular
 
     extra = 0
     model = Observation
+    fk_name = "visit"
     show_change_link = True
 
     def get_min_num(self, request, obj=None, **kwargs):
@@ -229,7 +231,7 @@ class ObservationInline(ObservationMixin, RestrictedByCenterMixin, admin.Tabular
 
 
 @admin.register(Observation)
-class ObservationAdmin(ObservationMixin, RestrictedByCenterMixin, admin.ModelAdmin):
+class ObservationAdmin(ObservationMixin, RestrictedByCenterMixin, NestedModelAdmin):
     search_fields = ["observable__name", "visit__patient__patient_id", "visit__patient__patient_cid"]
     search_help_text = "Observable, Patient ID or CID"
     date_hierarchy = "updated_at"
@@ -238,7 +240,13 @@ class ObservationAdmin(ObservationMixin, RestrictedByCenterMixin, admin.ModelAdm
     list_editable = ["days_observed", "severity"]
 
 
+class SpectralDataForm(forms.ModelForm):
+    def is_multipart(self):
+        return True
+
+
 class SpectralDataMixin:
+    form = SpectralDataForm
     radio_fields = {"instrument": admin.HORIZONTAL}
     ordering = ("-updated_at",)
 
@@ -255,7 +263,7 @@ class SpectralDataMixin:
 
 
 @admin.register(SpectralData)
-class SpectralDataAdmin(SpectralDataMixin, RestrictedByCenterMixin, admin.ModelAdmin):
+class SpectralDataAdmin(SpectralDataMixin, RestrictedByCenterMixin, NestedModelAdmin):
     search_fields = ["bio_sample__visit__patient__patient_id", "bio_sample__visit__patient__patient_cid"]
     search_help_text = "Patient ID or CID"
     readonly_fields = ["created_at", "updated_at"]  # TODO: Might need specific user group.
@@ -270,10 +278,12 @@ class SpectralDataAdmin(SpectralDataMixin, RestrictedByCenterMixin, admin.ModelA
     inlines = [QCAnnotationInline]
 
 
-class SpectralDataInline(SpectralDataMixin, RestrictedByCenterMixin, admin.StackedInline):
+class SpectralDataInline(SpectralDataMixin, RestrictedByCenterMixin, NestedStackedInline):
+    form = SpectralDataForm
     model = SpectralData
     extra = 0
     min_num = 1
+    fk_name = "bio_sample"
     show_change_link = True
 
 
@@ -294,7 +304,7 @@ class BioSampleMixin:
 
 
 @admin.register(BioSample)
-class BioSampleAdmin(BioSampleMixin, RestrictedByCenterMixin, admin.ModelAdmin):
+class BioSampleAdmin(BioSampleMixin, RestrictedByCenterMixin, NestedModelAdmin):
     search_fields = ["visit__patient__patient_id", "visit__patient__patient_cid"]
     search_help_text = "Patient ID or CID"
     date_hierarchy = "updated_at"
@@ -303,11 +313,13 @@ class BioSampleAdmin(BioSampleMixin, RestrictedByCenterMixin, admin.ModelAdmin):
     inlines = [SpectralDataInline]
 
 
-class BioSampleInline(BioSampleMixin, RestrictedByCenterMixin, admin.StackedInline):
+class BioSampleInline(BioSampleMixin, RestrictedByCenterMixin, NestedStackedInline):
     model = BioSample
     extra = 0
     min_num = 1
     show_change_link = True
+    fk_name = "visit"
+    inlines = [SpectralDataInline]
 
 
 class VisitAdminForm(forms.ModelForm):
@@ -342,15 +354,17 @@ class VisitAdminMixin:
         return qs.filter(patient__center=Center.objects.get(pk=request.user.center.pk))
 
 
-class VisitInline(VisitAdminMixin, RestrictedByCenterMixin, admin.TabularInline):
+class VisitInline(VisitAdminMixin, RestrictedByCenterMixin, NestedTabularInline):
     model = Visit
     extra = 0
     min_num = 1
     show_change_link = True
+    fk_name = "patient"
+    inlines = [BioSampleInline, ObservationInline]
 
 
 @admin.register(Visit)
-class VisitAdmin(VisitAdminMixin, RestrictedByCenterMixin, admin.ModelAdmin):
+class VisitAdmin(VisitAdminMixin, RestrictedByCenterMixin, NestedModelAdmin):
     search_fields = ["patient__patient_id", "patient__patient_cid"]
     search_help_text = "Patient ID or CID"
     date_hierarchy = "updated_at"
@@ -361,7 +375,7 @@ class VisitAdmin(VisitAdminMixin, RestrictedByCenterMixin, admin.ModelAdmin):
 
 
 @admin.register(Patient)
-class PatientAdmin(RestrictedByCenterMixin, admin.ModelAdmin):
+class PatientAdmin(RestrictedByCenterMixin, NestedModelAdmin):
     search_fields = ["patient_id", "patient_cid"]
     search_help_text = "Patient ID or CID"
     readonly_fields = ["created_at", "updated_at"]  # TODO: Might need specific user group.

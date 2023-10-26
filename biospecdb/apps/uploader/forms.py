@@ -134,4 +134,4 @@ class DataInputForm(forms.Form):
         # WARNING!: This func is NOT responsible for validation and self.is_valid() must be called first!
 
         # Update DB.
-        update_db(None, None, joined_data=self.massage_data())
+        update_db(None, None, center=self.request.user.center, joined_data=self.massage_data())

@@ -176,14 +176,20 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
 
 def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict:
     """
-    Ingest into the database large tables of symptom & disease data (aka "meta" data) along with associated spectral
-    data.
+    Update the database large tables of symptom & disease data (aka "meta" data) along with associated spectral data.
 
-    Note: Data can be passed in pre-joined, i.e., save_data_to_db(None, None, joined_data). If so, data can't be
-          validated.
-    Note: This func is called by UploadedFile.clean() which, therefore, can't also be called here.
+    Note: Data can be passed in pre-joined, i.e., update_db(None, None, joined_data). If so, data can't be validated.
+    
+    Note: This func is currently called by data_input(request), when the update is ordered from DataInputForm.
     """
-    from uploader.models import BioSample, Disease, Instrument, Patient, SpectralData, Symptom, UploadedFile, Visit
+    from uploader.models import BioSample, Disease, Instrument, Patient, SpectralData, Symptom, UploadedFile, Visit,\
+        Center as UploaderCenter
+    from user.models import Center as UserCenter
+
+    # Only user.models.User can relate to user.models,Center, all uploader models must use uploader.models.Center since
+    # these two apps live on separate databases.
+    if center and isinstance(center, UserCenter):
+        center = UploaderCenter.objects.get(pk=center.pk)
 
     if joined_data is None:
         # Read in all data.
@@ -196,6 +202,8 @@ def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict
 
     try:
         with transaction.atomic(using="bsr"):
+            spectral_data_files = []
+
             # Ingest into db.
             for index, row in joined_data.iterrows():
                 # NOTE: The pattern for column lookup is to use get(..., default=None) and defer the field validation,
@@ -207,13 +215,18 @@ def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict
                     # it's an int), however, '1' isn't. Here ``index`` is a string - and needs to be for UUIDs.
                     patient = Patient.objects.get(pk=index)
                 except (Patient.DoesNotExist, ValidationError):
-                    # NOTE: We do not use the ``index`` read from file as the pk even if it is a UUID. The above
-                    # ``get()`` only allows for existing patients to be re-used when _already_ in the db with their pk
-                    # already auto-generated.
-                    patient = Patient(gender=Patient.Gender(row.get(Patient.gender.field.verbose_name.lower())),
-                                      patient_id=index)
-                    patient.full_clean()
-                    patient.save()
+                    try:
+                        # Allow patients to be referenced by both patient_id and patient_cid.
+                        patient = Patient.objects.get(patient_cid=index)
+                    except (Patient.DoesNotExist, ValidationError):
+                        # NOTE: We do not use the ``index`` read from file as the pk even if it is a UUID. The above
+                        # ``get()`` only allows for existing patients to be re-used when _already_ in the db with their
+                        # pk already auto-generated.
+                        patient = Patient(gender=Patient.Gender(row.get(Patient.gender.field.verbose_name.lower())),
+                                          patient_id=index,
+                                          center=center)
+                        patient.full_clean()
+                        patient.save()
 
                 # Visit
                 # TODO: Add logic to auto-find previous_visit. https://github.com/ssec-jhu/biospecdb/issues/37
@@ -253,7 +266,12 @@ def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict
                 intensities = row["intensity"]
 
                 csv_data = spectral_data_to_csv(file=None, wavelengths=wavelengths, intensities=intensities)
-                data_filename = Path(str(Visit)).with_suffix(str(UploadedFile.FileFormats.CSV))
+
+                # Note: This won't be unique since multiple files can exist per biosample. However, we'd have to create
+                # this post save such as to mangle in spectraldata.pk. Instead, django will automatically append a
+                # random 7 digit string before the ext upon file name collisions.
+                data_filename = Path(f"{TEMP_FILENAME_PREFIX if dry_run else ''}{patient.patient_id}_{biosample.pk}").\
+                    with_suffix(str(UploadedFile.FileFormats.CSV))
 
                 spectraldata = SpectralData(instrument=instrument,
                                             bio_sample=biosample,
@@ -273,6 +291,7 @@ def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict
                 instrument.spectral_data.add(spectraldata, bulk=False)
                 spectraldata.full_clean()
                 spectraldata.save()
+                spectral_data_files.append(Path(spectraldata.data.name))
 
                 # Symptoms
                 # NOTE: Bulk data from client doesn't contain data for `days_symptomatic` per symptom, but instead per
@@ -299,3 +318,13 @@ def update_db(meta_data, spectral_data, joined_data=None, dry_run=False) -> dict
                 raise ExitTransaction()
     except ExitTransaction:
         pass
+    except Exception:
+        # Something went wrong and the above transaction was aborted so delete uncommitted and now orphaned files.
+        while spectral_data_files:
+            os.remove(spectral_data_files.pop())  # Pop to avoid repetition in finally branch.
+        raise
+    finally:
+        # Delete unwanted temporary files.
+        for file in spectral_data_files:
+            if file.name.startswith(TEMP_FILENAME_PREFIX):
+                os.remove(file)

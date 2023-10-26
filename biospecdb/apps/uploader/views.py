@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 
 from .forms import FileUploadForm, DataInputForm
 from uploader.models import Patient, Visit, SpectralData, BioSample, Symptom, Disease
-from biospecdb.util import is_valid_uuid, to_uuid
+from biospecdb.util import is_valid_uuid, to_uuid, num_changed_fields
 
 
 def home(request):
@@ -40,23 +40,24 @@ def data_input(request):
     message = ""
     form = DataInputForm(request=request)
     delta_count = len(form.base_fields) - 1
+    visit_date = ""
     
     if request.method == 'POST':
         form = DataInputForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
-            if amount of changed fields < total amount of fields:
+            if  num_changed_fields(form) < form.data.__len__(): # amount of changed fields < total amount of fields
                 form.update() # Update database with changed data
-                message = "Data Input with Patient ID {} has been submitted successfully!!!".format(patient_id)
+                message = "Data Input with Patient ID {} has been updated successfully!!!".format(patient_id)
             else: # New entry
                 form.save()  # Save data to database.
                 message = "Data Input with Patient ID {} has been submitted successfully!!!".format(patient_id)
-            patient_id = form.cleaned_data["patient_id"]
             return render(request, 'DataInputForm.html', {'form': form, 'message': message, 'delta_count': delta_count})
         
     elif request.method == 'GET':
         form = DataInputForm(request=request)
         patient_id = request.GET.get('patient_id')
+        visit_date = request.GET.get('visit_date')
         if patient_id:
             if not is_valid_uuid(patient_id):
                 message = "The provided Patient ID {} is not a valid number.".format(patient_id)

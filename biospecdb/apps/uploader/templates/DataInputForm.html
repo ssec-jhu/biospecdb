@@ -26,15 +26,22 @@
     <div>
         <form method="get" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="center-text">
-                <div class="form-field" class="fieldWrapper">
-                    <label for="{{ form.patient_id.id_for_label }}">Patient ID:</label>
-                    {{ form.patient_id }}
-                    {{ form.patient_id.errors }}
+            <div class="center-text" class="form-field">
+                <div class="flex-container" class="form-field">
+                    <div class="half_width" class="fieldWrapper">
+                        <label for="{{ form.patient_id.id_for_label }}">Patient ID:</label>
+                        {{ form.patient_id }}
+                        {{ form.patient_id.errors }}
+                    </div>
+                    <div class="half_width" class="fieldWrapper">
+                        <label for="{{ visit_date.id_for_label }}">Visit Date (YYYY-MM-DD):</label>
+                        <input type="text" name="visit_date" id="{{ visit_date.id_for_label }}" value="{{ visit_date.value }}">
+                        {{ visit_date.errors }}
+                    </div>
                 </div>
-                <div class="form-field">
-                    <button type="submit">Search for the existing patient</button>
-                </div>
+
+                <button type="submit">Search for the existing patient</button>
+                
             </div>
         </form>
 

@@ -98,3 +98,11 @@ def is_valid_uuid(value):
         except (AttributeError, ValueError):
             return False
     return True
+
+def num_changed_fields(form):
+    changed_fields = []
+    for field_name, initial_value in form.data.items():
+        cleaned_value = form.cleaned_data.get(field_name)
+        if cleaned_value != initial_value:
+            changed_fields.append(field_name)
+    return len(changed_fields)

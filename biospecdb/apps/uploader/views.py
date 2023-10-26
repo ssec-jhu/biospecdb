@@ -40,6 +40,7 @@ def data_input(request):
     message = ""
     form = DataInputForm(request=request)
     delta_count = len(form.base_fields) - 1
+    visit_date = ""
     
     if request.method == 'POST':
         form = DataInputForm(request.POST, request.FILES, request=request)

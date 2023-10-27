@@ -40,12 +40,19 @@ def data_input(request):
     message = ""
     form = DataInputForm(request=request)
     delta_count = len(form.base_fields) - 1
-    visit_date = ""
     
     if request.method == 'POST':
         form = DataInputForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
+            
+            changed_fields = {}
+            for field_name, field_value in form.cleaned_data.items():
+                # Check if the value has changed from the initial data
+                initial_data = form.initial
+                if field_name in form.initial and form.initial[field_name] != field_value:
+                    changed_fields[field_name] = field_value
+                
             if  num_changed_fields(form) < form.data.__len__(): # amount of changed fields < total amount of fields
                 form.update() # Update database with changed data
                 message = "Data Input with Patient ID {} has been updated successfully!!!".format(patient_id)
@@ -74,27 +81,50 @@ def data_input(request):
                         return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
                             'delta_count': delta_count})
                     
-                    last_visit = Visit.objects.select_for_update().filter(patient_id=patient_id) \
-                        .order_by('created_at').last()
-                    if last_visit is None:
+                    #Analyze the situation with visits
+                    previous_visits = Visit.objects.filter(patient_id=patient_id).order_by('created_at')
+                    visit = None
+                    if len(previous_visits) == 0:
                         message = "Data Search failed - there is no any visit of patient with Patient ID {}." \
                             .format(patient_id)
                         return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
                             'delta_count': delta_count})
-                        
-                    try:
-                        biosample = BioSample.objects.select_for_update().get(visit=last_visit)
-                    except (BioSample.DoesNotExist):
-                        message = "Data Search failed - there is no biosample associated with the visit {}." \
-                            .format(last_visit)
+                    elif len(previous_visits) == 1:
+                        visit = previous_visits.last()
+                        timestamp = visit.created_at
+                        visit_date = timestamp.strftime("%Y-%m-%d")
+                    else: #More than one visit
+                        if visit_date == '':
+                            message = "There are multiple visits of the patient {} - please specify the Visit Date." \
+                                .format(patient_id)
+                            return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
+                                'delta_count': delta_count})
+                        else: 
+                            for current_visit in previous_visits:
+                                timestamp = current_visit.created_at
+                                formatted_datetime = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                                if visit_date in formatted_datetime:
+                                    visit = current_visit
+                                    break 
+                    if visit is None:
+                        message = "Data Search failed - there is no visit of patient with Patient ID {} on {}." \
+                            .format(patient_id, visit_date)
                         return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
                             'delta_count': delta_count})
                         
-                    last_visit_symptoms = Symptom.objects.select_for_update().filter(visit=last_visit)
-                    symptom = last_visit_symptoms.order_by('days_symptomatic').last()
+                    try:
+                        biosample = BioSample.objects.select_for_update().get(visit=visit)
+                    except (BioSample.DoesNotExist):
+                        message = "Data Search failed - there is no biosample associated with the visit {}." \
+                            .format(visit)
+                        return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
+                            'delta_count': delta_count})
+                        
+                    visit_symptoms = Symptom.objects.select_for_update().filter(visit=visit)
+                    symptom = visit_symptoms.order_by('days_symptomatic').last()
                     if symptom is None:
                         message = "Data Search failed - there are no symptoms associated with the visit {}." \
-                            .format(last_visit)
+                            .format(visit)
                         return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
                             'delta_count': delta_count})
                         
@@ -110,7 +140,7 @@ def data_input(request):
                         'patient_id': patient_id,
                         'gender': patient.gender,
                         'days_symptomatic': symptom.days_symptomatic,
-                        'patient_age': last_visit.patient_age,
+                        'patient_age': visit.patient_age,
                         'spectra_measurement': spectraldata.spectra_measurement,
                         'instrument': spectraldata.instrument,
                         'acquisition_time': spectraldata.acquisition_time,
@@ -122,14 +152,14 @@ def data_input(request):
                         'thawing_time': biosample.thawing_time,
                         'spectral_data': spectraldata.data
                     }
-                    for symptom in last_visit_symptoms:
+                    for symptom in visit_symptoms:
                         if symptom.disease.value_class == "BOOL":
                             initial_data[symptom.disease.name] = \
                                 Disease.Types(symptom.disease.value_class).cast(symptom.disease_value)   
                         else:
                             initial_data[symptom.disease.name] = symptom.disease_value
                     form = DataInputForm(initial=initial_data, request=request)
-                    message = "The data associated with Patient ID {} is shown below:".format(patient_id)
+                    message = "The data associated with Patient ID {} on {} is shown below:".format(patient_id, visit_date)
                     return render(request, 'DataInputForm.html', {'form': form, 'message': message, \
                         'delta_count': delta_count})
                 

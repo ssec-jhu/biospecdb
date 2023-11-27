@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "graphene_django",
     "explorer",
     "uploader.apps.UploaderConfig",
     "user.apps.UserConfig"
@@ -142,6 +143,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+GRAPHENE = {
+    "SCHEMA": "biospecdb.schema.schema"
+}
 
 # SQL explorer settings.
 

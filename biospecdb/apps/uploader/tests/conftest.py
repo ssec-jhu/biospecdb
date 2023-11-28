@@ -1,10 +1,14 @@
+from inspect import getmembers
 from pathlib import Path
 import shutil
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 import django.core.files
 from django.core.management import call_command
+from django.db import models
 from django.test import RequestFactory
 from explorer.models import Query
 from explorer.tests.factories import UserFactory as ExplorerUserFactory
@@ -12,13 +16,80 @@ from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
 import pytest
 
-
+from uploader.base_models import DatedModel, SqlView, ModelWithViewDependency
 from biospecdb.util import find_package_location
+import uploader.models
 from uploader.models import SpectralData, UploadedFile, Center
 from uploader.forms import DataInputForm
-from user.models import Center as UserCenter
+from user.models import BaseCenter, Center as UserCenter
 
 DATA_PATH = Path(__file__).parent / "data"
+
+User = get_user_model()
+
+
+def app_models():
+    model_list = []
+
+    for name, obj in getmembers(uploader.models):
+        if isinstance(obj, type) \
+                and issubclass(obj, models.Model) \
+                and not issubclass(obj, (SqlView, BaseCenter)) \
+                and obj not in (BaseCenter, DatedModel, ModelWithViewDependency, SqlView):
+            model_list.append(obj)
+    return model_list
+
+
+uploader_models = app_models()
+
+
+def add_model_perms(user, model=None, action=None):
+    if model:
+        if action is None:
+            raise NotImplementedError("action must be specified.")
+        perm = Permission.objects.get(codename=f"{action}_{model}")
+        user.user_permissions.add(perm)
+    else:
+        for perm in Permission.objects.all():
+            for obj in uploader_models:
+                if obj.__name__.lower() in perm.codename:
+                    if action:
+                        if action in perm.codename:
+                            user.user_permissions.add(perm)
+                    else:
+                        user.user_permissions.add(perm)
+    user.save()
+    return user
+
+
+@pytest.fixture()
+def non_staffuser(centers):
+    return User.objects.create(username="active",
+                               email="active@jhu.edu",
+                               password="secret",
+                               center=UserCenter.objects.get(name="SSEC"),
+                               is_staff=False,
+                               is_superuser=False)
+
+
+@pytest.fixture()
+def staffuser(centers):
+    return User.objects.create(username="staff",
+                               email="staff@jhu.edu",
+                               password="secret",
+                               center=UserCenter.objects.get(name="SSEC"),
+                               is_staff=True,
+                               is_superuser=False)
+
+
+@pytest.fixture()
+def superuser(centers):
+    return User.objects.create(username="admin",
+                               email="admin@jhu.edu",
+                               password="secret",
+                               center=UserCenter.objects.get(name="SSEC"),
+                               is_staff=True,
+                               is_superuser=True)
 
 
 @pytest.fixture(scope="function", autouse=True)

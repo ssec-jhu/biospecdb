@@ -18,7 +18,6 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
-from graphene_django.views import GraphQLView
 
 from uploader import views
 from uploader.admin import data_admin
@@ -33,7 +32,7 @@ urlpatterns = [
     path('display/', views.display_xlsx, name='MetadataDisplay'),
     path('explorer/', include('explorer.urls')),
     path('data/', data_admin.urls),
-    path("graphql", GraphQLView.as_view(graphiql=True)),
+    path("graphql", views.PrivateGraphQLView.as_view(graphiql=True)),
 ]
 
 if settings.DEBUG:

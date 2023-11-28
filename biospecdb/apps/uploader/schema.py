@@ -149,17 +149,13 @@ class Query(graphene.ObjectType):
     all_spectra_measurement_types = DjangoFilterConnectionField(SpectraMeasurementTypeNode)
 
     spectral_data = graphene.relay.Node.Field(SpectralDataNode)
-    all_spectral_data = DjangoFilterConnectionField(SpectralDataNode)
+    all_spectral_datas = DjangoFilterConnectionField(SpectralDataNode)
 
     qc_annotator = graphene.relay.Node.Field(QCAnnotatorNode)
-    all_qc_annotators = DjangoFilterConnectionField(QCAnnotatorNode)
+    all_q_c_annotators = DjangoFilterConnectionField(QCAnnotatorNode)
 
     qc_annotation = graphene.relay.Node.Field(QCAnnotationNode)
-    all_qc_annotations = DjangoFilterConnectionField(QCAnnotationNode)
-
-
-class Mutation(graphene.ObjectType):
-    ...
+    all_q_c_annotations = DjangoFilterConnectionField(QCAnnotationNode)
 
 
 schema = graphene.Schema(query=Query)

@@ -1,11 +1,18 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.db import transaction
+from django.utils.decorators import method_decorator
+from graphene_django.views import GraphQLView
 from openpyxl import load_workbook
 
 from .forms import FileUploadForm, DataInputForm
 from uploader.models import Patient, Visit, SpectralData, BioSample, Observation, Observable
 from biospecdb.util import is_valid_uuid, to_uuid
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class PrivateGraphQLView(GraphQLView):
+    ...
 
 
 def home(request):

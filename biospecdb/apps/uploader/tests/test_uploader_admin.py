@@ -1,13 +1,8 @@
-from inspect import getmembers
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
-from django.db import models
 from django.test import Client
 import pytest
 
-from user.models import BaseCenter, Center as UserCenter
-from uploader.base_models import DatedModel, SqlView, ModelWithViewDependency
+from uploader.tests.conftest import add_model_perms, app_models
 import uploader.models
 
 
@@ -16,53 +11,7 @@ User = get_user_model()
 SKIP_MODELS = [uploader.models.BioSampleType, uploader.models.SpectraMeasurementType]
 
 
-uploader_models = []
-for name, obj in getmembers(uploader.models):
-    if isinstance(obj, type)\
-            and issubclass(obj, models.Model)\
-            and not issubclass(obj, (SqlView, BaseCenter)) \
-            and obj not in (BaseCenter, DatedModel, ModelWithViewDependency, SqlView):
-        uploader_models.append(obj)
-
-
-def add_model_perms(user, model=None, action=None):
-    if model:
-        if action is None:
-            raise NotImplementedError("action must be specified.")
-        perm = Permission.objects.get(codename=f"{action}_{model}")
-        user.user_permissions.add(perm)
-    else:
-        for perm in Permission.objects.all():
-            for obj in uploader_models:
-                if obj.__name__.lower() in perm.codename:
-                    if action:
-                        if action in perm.codename:
-                            user.user_permissions.add(perm)
-                    else:
-                        user.user_permissions.add(perm)
-    user.save()
-    return user
-
-
-@pytest.fixture()
-def staffuser(centers):
-    user = User.objects.create(username="staff",
-                               email="staff@jhu.edu",
-                               password="secret",
-                               center=UserCenter.objects.get(name="SSEC"),
-                               is_staff=True,
-                               is_superuser=False)
-    return user
-
-
-@pytest.fixture()
-def superuser(centers):
-    return User.objects.create(username="admin",
-                               email="admin@jhu.edu",
-                               password="secret",
-                               center=UserCenter.objects.get(name="SSEC"),
-                               is_staff=True,
-                               is_superuser=True)
+uploader_models = app_models()
 
 
 @pytest.mark.django_db(databases=["default", "bsr"])

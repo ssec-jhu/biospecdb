@@ -14,7 +14,7 @@ from uploader.loaddata import save_data_to_db
 from user.models import Center as UserCenter
 from uploader.models import Center as UploaderCenter
 import biospecdb.util
-from uploader.tests.conftest import DATA_PATH
+from uploader.tests.conftest import bulk_upload, DATA_PATH
 
 
 @pytest.mark.django_db(databases=["default", "bsr"])
@@ -445,6 +445,41 @@ class TestUploadedFile:
                                                                                  name=spectral_file_path.name))
             with pytest.raises(ValidationError, match="Patient ID mismatch."):
                 data_upload.clean()
+
+    def test_re_upload(self, django_db_blocker, observables, instruments, mock_data_from_files):
+        n_patients = 10
+        assert UploadedFile.objects.count() == 1
+        assert Patient.objects.count() == n_patients
+        assert Visit.objects.count() == n_patients
+
+        with django_db_blocker.unblock():
+            bulk_upload()
+
+        assert UploadedFile.objects.count() == 2
+        assert Patient.objects.count() == n_patients
+        assert Visit.objects.count() == n_patients * 2
+
+    def test_upload_on_cid(self, django_db_blocker, observables, instruments, mock_data_from_files):
+        n_patients = 10
+        assert UploadedFile.objects.count() == 1
+        assert Patient.objects.count() == n_patients
+        assert Visit.objects.count() == n_patients
+
+        # copy patients
+        for patient in Patient.objects.select_related("center").all():
+            new_patient = Patient(patient_cid=patient.patient_cid, gender=patient.gender, center=patient.center)
+            patient.delete()
+            new_patient.full_clean()
+            new_patient.save()
+
+        assert Patient.objects.count() == n_patients
+
+        with django_db_blocker.unblock():
+            bulk_upload()
+
+        assert UploadedFile.objects.count() == 2
+        assert Patient.objects.count() == n_patients * 1
+        assert Visit.objects.count() == n_patients * 1
 
 
 @pytest.mark.django_db(databases=["default", "bsr"])

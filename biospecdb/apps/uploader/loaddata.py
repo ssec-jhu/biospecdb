@@ -40,6 +40,7 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
         UploadedFile.validate_lengths(meta_data, spec_data)
         joined_data = UploadedFile.join_with_validation(meta_data, spec_data)
 
+    has_patient_cid = Patient.patient_cid.field.verbose_name.lower() in joined_data.columns
     try:
         with transaction.atomic(using="bsr"):
             spectral_data_files = []
@@ -55,9 +56,29 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
                     # it's an int), however, '1' isn't. Here ``index`` is a string - and needs to be for UUIDs.
                     patient = Patient.objects.get(pk=index)
                 except (Patient.DoesNotExist, ValidationError):
+                    if has_patient_cid:
+                        try:
+                            # Allow patients to be referenced by both patient_id and patient_cid.
+                            # Note: patient_cid is only guaranteed to be unique to a center and not by itself.
+                            patient_cid = row.get(Patient.patient_cid.field.verbose_name.lower())
+                            patient = Patient.objects.get(patient_cid=patient_cid, center=center)
+
+                    else:
+                        # NOTE: We do not use the ``index`` read from file as the pk even if it is a UUID. The above
+                        # ``get()`` only allows for existing patients to be re-used when _already_ in the db with their
+                        # pk already auto-generated.
+                        patient = Patient(gender=Patient.Gender(row.get(Patient.gender.field.verbose_name.lower())),
+                                          patient_id=index,
+                                          center=center)
+                        patient.full_clean()
+                        patient.save()
+
                     try:
                         # Allow patients to be referenced by both patient_id and patient_cid.
-                        patient = Patient.objects.get(patient_cid=index)
+                        # Note: patient_cid is only guaranteed to be unique to a center and not by itself.
+                        patient_cid = row.get(Patient.patient_cid.field.verbose_name.lower())
+
+                        patient = Patient.objects.get(patient_cid=patient_cid, center=center)
                     except (Patient.DoesNotExist, ValidationError):
                         # NOTE: We do not use the ``index`` read from file as the pk even if it is a UUID. The above
                         # ``get()`` only allows for existing patients to be re-used when _already_ in the db with their

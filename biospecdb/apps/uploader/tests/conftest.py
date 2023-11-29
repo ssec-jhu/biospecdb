@@ -148,6 +148,20 @@ def mock_data(db, django_db_blocker, centers):
         call_command('loaddata', "--database=bsr", 'test_data.json')
 
 
+def bulk_upload():
+    meta_data_path = (DATA_PATH / "meta_data").with_suffix(UploadedFile.FileFormats.XLSX)
+    spectral_file_path = (DATA_PATH / "spectral_data").with_suffix(UploadedFile.FileFormats.XLSX)
+    with meta_data_path.open(mode="rb") as meta_data:
+        with spectral_file_path.open(mode="rb") as spectral_data:
+            data_upload = UploadedFile(meta_data_file=django.core.files.File(meta_data,
+                                                                             name=meta_data_path.name),
+                                       spectral_data_file=django.core.files.File(spectral_data,
+                                                                                 name=spectral_file_path.name),
+                                       center=Center.objects.get(name="SSEC"))
+            data_upload.clean()
+            data_upload.save()
+
+
 @pytest.fixture(scope="function")
 def mock_data_from_files(request,
                          monkeypatch,
@@ -167,18 +181,9 @@ def mock_data_from_files(request,
     auto_annotate = False if getattr(request, "param", None) is None else request.param
     monkeypatch.setattr(settings, "AUTO_ANNOTATE", auto_annotate)
 
-    meta_data_path = (DATA_PATH / "meta_data").with_suffix(UploadedFile.FileFormats.XLSX)
-    spectral_file_path = (DATA_PATH / "spectral_data").with_suffix(UploadedFile.FileFormats.XLSX)
     with django_db_blocker.unblock():
-        with meta_data_path.open(mode="rb") as meta_data:
-            with spectral_file_path.open(mode="rb") as spectral_data:
-                data_upload = UploadedFile(meta_data_file=django.core.files.File(meta_data,
-                                                                                 name=meta_data_path.name),
-                                           spectral_data_file=django.core.files.File(spectral_data,
-                                                                                     name=spectral_file_path.name),
-                                           center=Center.objects.get(name="SSEC"))
-                data_upload.clean()
-                data_upload.save()
+        bulk_upload()
+
 
     yield
 

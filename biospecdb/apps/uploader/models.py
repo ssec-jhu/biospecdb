@@ -155,6 +155,7 @@ class Patient(DatedModel):
     patient_cid = models.CharField(max_length=128,
                                    null=True,
                                    blank=True,
+                                   verbose_name="Patient CID",
                                    help_text="Patient ID prescribed by the associated center")
     center = models.ForeignKey(Center, null=False, blank=False, on_delete=models.PROTECT)
 

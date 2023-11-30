@@ -314,6 +314,14 @@ class Observable(ModelWithViewDependency):
     # A observable without a center is generic and accessible by any and all centers.
     center = models.ForeignKey(Center, null=True, blank=True, on_delete=models.PROTECT)
 
+    # Compliance flags.
+    hipaa_compliant = models.BooleanField(blank=True,
+                                          null=True,
+                                          help_text="Whether observable is HIPAA (USA) compliant")
+    gdpr_compliant = models.BooleanField(blank=True,
+                                         null=True,
+                                         help_text="Whether observable is GDPR (EU) compliant")
+
     def __str__(self):
         return self.name
 

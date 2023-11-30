@@ -18,7 +18,8 @@ dependencies = [
     "pandas",
     "plotly",
     "uvicorn",
-    "xlsxwriter"
+    "xlsxwriter",
+    "django-decorator-include@git+https://github.com/twidi/django-decorator-include.git"
 ]
 
 [project.optional-dependencies]

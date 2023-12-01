@@ -77,6 +77,9 @@ class TestAdminPage:
         if url_root == "/data/uploader/" and model in SKIP_MODELS:
             pytest.skip("Model not registered with data admin site.")
 
+        if url_root == "/admin/uploader/" and not user.is_superuser:
+            pytest.skip("Admin site restricted to superuser.")
+
         if model in SKIP_MODELS and not user.is_superuser:
             pytest.skip("Model edits restricted to superuser")
 
@@ -94,6 +97,9 @@ class TestAdminPage:
         if url_root == "/data/uploader/" and model in SKIP_MODELS:
             pytest.skip("Model not registered with data admin site.")
 
+        if url_root == "/admin/uploader/" and not staffuser.is_superuser:
+            pytest.skip("Admin site restricted to superuser.")
+
         c = Client()
         model_name = model.__name__.lower()
         if with_perm:
@@ -108,6 +114,9 @@ class TestAdminPage:
     def test_admin_add_perms_pages(self, with_perm, staffuser, url_root, model):
         if url_root == "/data/uploader/" and model in SKIP_MODELS:
             pytest.skip("Model not registered with data admin site.")
+
+        if url_root == "/admin/uploader/" and not staffuser.is_superuser:
+            pytest.skip("Admin site restricted to superuser.")
 
         c = Client()
         model_name = model.__name__.lower()

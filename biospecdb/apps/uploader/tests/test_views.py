@@ -20,18 +20,6 @@ class TestViews:
         assert len(all_view_data) > 1  # Check non-empty.
         assert len(all_view_data) == len(all_django_view_data)
 
-    def test_observations_view_django_model_filter(self, mock_data, sql_views):
-        ObservationsView.update_view()
-        week_long_observations_1 = execute_sql(f"""
-                                           select *
-                                           from {ObservationsView._meta.db_table}
-                                           where days_observed = 7
-                                           """,
-                                           db=ObservationsView.db)
-        week_long_observations_2 = ObservationsView.objects.filter(days_observed=7)
-        assert len(week_long_observations_1) > 1  # Check non-empty.
-        assert len(week_long_observations_1) == len(week_long_observations_2)
-
     def test_django_raise_on_missing_view(self, mock_data):
         ObservationsView.drop_view()
         with pytest.raises(OperationalError, match="no such table:"):

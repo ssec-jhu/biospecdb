@@ -152,29 +152,18 @@ class TestInstrument:
 
 @pytest.mark.django_db(databases=["default", "bsr"])
 class TestObservation:
-    def test_days_observed_validation(self, db, observables, visits):
-        visit = Visit.objects.get(pk=1)
-        age = visit.patient_age
-        observation = Observation.objects.create(visit=visit,
-                                         observable=Observable.objects.get(name="fever"),
-                                         days_observed=age * 365 + 1)
-        with pytest.raises(ValidationError):
-            observation.full_clean()
-
     def test_observable_value_validation(self, db, observables, visits):
         observation = Observation.objects.create(visit=Visit.objects.get(pk=1),
-                                         observable=Observable.objects.get(name="Ct_gene_N"),
-                                         days_observed=7,
-                                         observable_value="strings can't cast to floats")
+                                                 observable=Observable.objects.get(name="Ct_gene_N"),
+                                                 observable_value="strings can't cast to floats")
         with pytest.raises(ValidationError):
             observation.full_clean()
 
     @pytest.mark.parametrize("value", (True, False))
     def test_observable_value_bool_cast(self, db, observables, visits, value):
         observation = Observation.objects.create(visit=Visit.objects.get(pk=1),
-                                         observable=Observable.objects.get(name="fever"),
-                                         days_observed=7,
-                                         observable_value=str(value))
+                                                 observable=Observable.objects.get(name="fever"),
+                                                 observable_value=str(value))
         observation.full_clean()
         assert observation.observable_value is value
 
@@ -345,14 +334,6 @@ class TestUploadedFile:
                                                                      get(name="Covid_RT_qPCR")))
                                          .filter(observable_value="Negative"))
         assert n_observations == n_patients * n_observables - n_empty_covid_observations * 2
-
-    def test_days_of_observations(self, mock_data_from_files):
-        week_long_observations = Observation.objects.filter(days_observed=7)
-        assert len(week_long_observations) > 1
-        assert week_long_observations[0].days_observed == 7
-        null_days = len(Observation.objects.filter(days_observed=None))
-        assert null_days > 1
-        assert null_days < len(Observation.objects.all())
 
     @pytest.mark.parametrize("file_ext", UploadedFile.FileFormats.list())
     def test_patient_ids(self, mock_data_from_files, file_ext):

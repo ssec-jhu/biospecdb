@@ -494,8 +494,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 3,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -507,8 +505,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 4,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -520,8 +516,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 5,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -533,8 +527,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 6,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -546,8 +538,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 7,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -559,8 +549,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 8,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -572,8 +560,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 9,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -585,8 +571,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 10,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -598,8 +582,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 11,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -611,8 +593,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 12,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -624,8 +604,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 13,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -637,8 +615,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 14,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -650,8 +626,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 15,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -663,8 +637,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 16,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -676,8 +648,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 17,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -689,8 +659,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 18,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -702,8 +670,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 19,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -715,8 +681,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 20,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -728,8 +692,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 21,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -741,8 +703,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1118,
         "observable": 22,
-        "days_observed": 7,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -754,8 +714,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 3,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -767,8 +725,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 4,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -780,8 +736,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 5,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -793,8 +747,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 6,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -806,8 +758,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 7,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -819,8 +769,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 8,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -832,8 +780,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 9,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -845,8 +791,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 10,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -858,8 +802,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 11,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -871,8 +813,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 12,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -884,8 +824,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 13,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -897,8 +835,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 14,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -910,8 +846,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 15,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -923,8 +857,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 16,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -936,8 +868,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 17,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -949,8 +879,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 18,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -962,8 +890,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 19,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -975,8 +901,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 20,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -988,8 +912,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 21,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1001,8 +923,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1119,
         "observable": 22,
-        "days_observed": 1,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1014,8 +934,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 3,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -1027,8 +945,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 4,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1040,8 +956,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 5,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1053,8 +967,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 6,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1066,8 +978,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 7,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1079,8 +989,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 8,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1092,8 +1000,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 9,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1105,8 +1011,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 10,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1118,8 +1022,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 11,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1131,8 +1033,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 12,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1144,8 +1044,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 13,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1157,8 +1055,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 14,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1170,8 +1066,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 15,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1183,8 +1077,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 16,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1196,8 +1088,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 17,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1209,8 +1099,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 18,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1222,8 +1110,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 19,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1235,8 +1121,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 20,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1248,8 +1132,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 21,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1261,8 +1143,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1120,
         "observable": 22,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1274,8 +1154,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 3,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -1287,8 +1165,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 4,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1300,8 +1176,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 5,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1313,8 +1187,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 6,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1326,8 +1198,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 7,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1339,8 +1209,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 8,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1352,8 +1220,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 9,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1365,8 +1231,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 10,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1378,8 +1242,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 11,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1391,8 +1253,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 12,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1404,8 +1264,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 13,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1417,8 +1275,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 14,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1430,8 +1286,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 15,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1443,8 +1297,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 16,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1456,8 +1308,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 17,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1469,8 +1319,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 18,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1482,8 +1330,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 19,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1495,8 +1341,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 20,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1508,8 +1352,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 21,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1521,8 +1363,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1121,
         "observable": 22,
-        "days_observed": 2,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1534,8 +1374,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 3,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -1547,8 +1385,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 4,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1560,8 +1396,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 5,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1573,8 +1407,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 6,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1586,8 +1418,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 7,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1599,8 +1429,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 8,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1612,8 +1440,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 9,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -1625,8 +1451,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 10,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1638,8 +1462,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 11,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1651,8 +1473,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 12,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1664,8 +1484,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 13,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1677,8 +1495,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 14,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1690,8 +1506,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 15,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1703,8 +1517,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 16,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1716,8 +1528,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 17,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1729,8 +1539,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 18,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1742,8 +1550,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 19,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1755,8 +1561,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 20,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1768,8 +1572,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 21,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1781,8 +1583,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1122,
         "observable": 22,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1794,8 +1594,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 1,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "24.8"
     }
 },
@@ -1807,8 +1605,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 2,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "24.8"
     }
 },
@@ -1820,8 +1616,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 3,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "Positive"
     }
 },
@@ -1833,8 +1627,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 4,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1846,8 +1638,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 5,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1859,8 +1649,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 6,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1872,8 +1660,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 7,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1885,8 +1671,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 8,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1898,8 +1682,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 9,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1911,8 +1693,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 10,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1924,8 +1704,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 11,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1937,8 +1715,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 12,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1950,8 +1726,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 13,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1963,8 +1737,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 14,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1976,8 +1748,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 15,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -1989,8 +1759,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 16,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2002,8 +1770,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 17,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2015,8 +1781,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 18,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2028,8 +1792,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 19,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2041,8 +1803,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 20,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2054,8 +1814,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 21,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2067,8 +1825,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1123,
         "observable": 22,
-        "days_observed": null,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2080,8 +1836,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 1,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "18.18"
     }
 },
@@ -2093,8 +1847,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 2,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "18.18"
     }
 },
@@ -2106,8 +1858,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 3,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "Positive"
     }
 },
@@ -2119,8 +1869,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 4,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2132,8 +1880,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 5,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2145,8 +1891,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 6,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2158,8 +1902,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 7,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2171,8 +1913,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 8,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2184,8 +1924,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 9,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2197,8 +1935,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 10,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2210,8 +1946,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 11,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2223,8 +1957,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 12,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2236,8 +1968,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 13,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2249,8 +1979,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 14,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2262,8 +1990,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 15,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2275,8 +2001,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 16,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2288,8 +2012,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 17,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2301,8 +2023,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 18,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2314,8 +2034,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 19,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2327,8 +2045,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 20,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2340,8 +2056,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 21,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2353,8 +2067,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1124,
         "observable": 22,
-        "days_observed": 3,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2366,8 +2078,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 3,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -2379,8 +2089,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 4,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2392,8 +2100,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 5,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2405,8 +2111,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 6,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2418,8 +2122,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 7,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2431,8 +2133,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 8,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2444,8 +2144,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 9,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2457,8 +2155,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 10,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2470,8 +2166,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 11,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2483,8 +2177,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 12,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2496,8 +2188,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 13,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2509,8 +2199,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 14,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2522,8 +2210,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 15,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2535,8 +2221,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 16,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2548,8 +2232,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 17,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2561,8 +2243,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 18,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2574,8 +2254,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 19,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2587,8 +2265,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 20,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2600,8 +2276,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 21,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2613,8 +2287,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1125,
         "observable": 22,
-        "days_observed": 5,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2626,8 +2298,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 3,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -2639,8 +2309,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 4,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2652,8 +2320,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 5,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2665,8 +2331,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 6,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2678,8 +2342,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 7,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2691,8 +2353,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 8,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2704,8 +2364,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 9,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2717,8 +2375,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 10,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2730,8 +2386,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 11,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2743,8 +2397,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 12,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2756,8 +2408,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 13,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2769,8 +2419,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 14,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2782,8 +2430,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 15,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2795,8 +2441,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 16,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2808,8 +2452,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 17,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2821,8 +2463,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 18,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2834,8 +2474,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 19,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2847,8 +2485,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 20,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2860,8 +2496,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 21,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2873,8 +2507,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1126,
         "observable": 22,
-        "days_observed": 11,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2886,8 +2518,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 3,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "Negative"
     }
 },
@@ -2899,8 +2529,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 4,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2912,8 +2540,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 5,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2925,8 +2551,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 6,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2938,8 +2562,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 7,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -2951,8 +2573,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 8,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2964,8 +2584,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 9,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2977,8 +2595,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 10,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -2990,8 +2606,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 11,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -3003,8 +2617,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 12,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3016,8 +2628,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 13,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3029,8 +2639,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 14,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "True"
     }
 },
@@ -3042,8 +2650,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 15,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3055,8 +2661,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 16,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3068,8 +2672,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 17,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3081,8 +2683,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 18,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3094,8 +2694,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 19,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3107,8 +2705,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 20,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3120,8 +2716,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 21,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },
@@ -3133,8 +2727,6 @@
         "updated_at": "2013-09-06T00:00:00+00:00",
         "visit": 1127,
         "observable": 22,
-        "days_observed": 12,
-        "severity": null,
         "observable_value": "False"
     }
 },

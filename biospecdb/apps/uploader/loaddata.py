@@ -105,9 +105,6 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
                 instrument.spectral_data.add(spectraldata, bulk=False)
 
                 # Observations
-                # NOTE: Bulk data from client doesn't contain data for `days_observed` per observation, but instead per
-                # patient.
-                days_observed = row.get(Observation.days_observed.field.verbose_name.lower(), None)
                 for observable in Observable.objects.all():
                     observation_value = row.get(observable.alias.lower(), None)
                     if observation_value is None:
@@ -118,8 +115,7 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
                     observation_value = Observable.Types(observable.value_class).cast(observation_value)
                     observation = Observation(observable=observable,
                                               visit=visit,
-                                              observable_value=observation_value,
-                                              days_observed=days_observed)
+                                              observable_value=observation_value)
                     observation.full_clean()
                     observation.save()
                     observable.observation.add(observation, bulk=False)

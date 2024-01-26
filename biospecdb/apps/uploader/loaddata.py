@@ -13,7 +13,7 @@ class ExitTransaction(Exception):
     ...
 
 
-def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry_run=False) -> dict:
+def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry_run=False, src_file=None) -> dict:
 
     """
     Ingest into the database large tables of observation & observable data (aka "meta" data) along with associated
@@ -72,7 +72,8 @@ def save_data_to_db(meta_data, spectral_data, center=None, joined_data=None, dry
                         patient.save()
 
                 # Visit
-                visit = Visit(patient=patient, **Visit.parse_fields_from_pandas_series(row))
+                src_file = src_file if not dry_run else None  # DB relations only allowed between already saved objects.
+                visit = Visit(patient=patient, src_file=src_file, **Visit.parse_fields_from_pandas_series(row))
                 visit.full_clean()
                 visit.save()
 

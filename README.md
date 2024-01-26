@@ -76,6 +76,10 @@ For additional cmds see the [Conda cheat-sheet](https://docs.conda.io/projects/c
   * ``RUN_DEFAULT_ANNOTATORS_WHEN_SAVED``: Run newly added/updated annotator on all spectral data if annotator.default 
     is True. WARNING: This may be time-consuming if the annotators takes a while to run and there are a lot of spectral
     data samples in the database. See [Quality Control Annotations](#quality-control-annotations).
+  * ``DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD``: When deleting a bulk uploaded data file, also delete all DB entries
+    created from the bulk data upload. Note: This won't delete the patient entry itself, just the visit and all other
+    data related to the visit. This is because there's no way to know whether the patient previously existed even if it
+    had no associated visit.
 
 
 ### DB Management:

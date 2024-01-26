@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from uuid import uuid4
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 import django.core.files
 from django.core.files.base import ContentFile
@@ -512,6 +513,27 @@ class TestUploadedFile:
         assert not os.path.exists(bulk_upload.meta_data_file.name)
         assert not os.path.exists(bulk_upload.spectral_data_file.name)
 
+    def test_src_file_tracking(self, mock_data_from_files):
+        assert UploadedFile.objects.all()[0].visits.count() == 10
+
+    def test_deletion_and_all_visit_data(self,  monkeypatch, mock_data_from_files):
+        monkeypatch.setattr(settings, "DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD", True)
+
+        bulk_upload = UploadedFile.objects.all()[0]
+        spectral_data_filenames = [x.data.name for x in SpectralData.objects.all()]
+        assert bulk_upload.visits.count() == 10
+        assert Visit.objects.count() == 10
+
+        count, deleted = bulk_upload.delete()
+        assert count == 235
+        assert sum(deleted.values()) == 235
+        assert not Visit.objects.count()
+        assert not BioSample.objects.count()
+        assert not SpectralData.objects.count()
+
+        for filename in spectral_data_filenames:
+            assert not os.path.exists(filename)
+
 
 @pytest.mark.django_db(databases=["default", "bsr"])
 def test_get_center(centers, mock_data_from_files):
@@ -531,11 +553,11 @@ def test_get_center(centers, mock_data_from_files):
     for visit in patient.visit.all():
         assert get_center(visit) is center
 
-    for bio_sample in visit.bio_sample.all():
-        assert get_center(bio_sample) is center
+        for bio_sample in visit.bio_sample.all():
+            assert get_center(bio_sample) is center
 
-    for spectral_data in bio_sample.spectral_data.all():
-        assert get_center(spectral_data) is center
+            for spectral_data in bio_sample.spectral_data.all():
+                assert get_center(spectral_data) is center
 
     for observation in Observation.objects.filter(visit__patient__center=center):
         assert get_center(observation) == center

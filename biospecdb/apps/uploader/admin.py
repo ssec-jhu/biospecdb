@@ -489,7 +489,7 @@ class VisitAdminMixin:
             "Advanced",
             {
                 "classes": ["collapse"],
-                "fields": ["previous_visit"],
+                "fields": ["previous_visit", "src_file"],
             }
         ),
     ]

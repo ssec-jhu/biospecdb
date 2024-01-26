@@ -1,3 +1,4 @@
+from collections import Counter
 from copy import deepcopy
 from enum import auto
 import os
@@ -119,7 +120,7 @@ class UploadedFile(DatedModel):
         joined_data = UploadedFile.join_with_validation(meta_data, spec_data)
 
         # Ingest into DB.
-        save_data_to_db(None, None, center=self.center, joined_data=joined_data, dry_run=dry_run)
+        save_data_to_db(None, None, center=self.center, joined_data=joined_data, dry_run=dry_run, src_file=self)
 
     def clean(self):
         """ Model validation. """
@@ -134,10 +135,33 @@ class UploadedFile(DatedModel):
         raise NotImplementedError
 
     def delete(self, *args, **kwargs):
+        """ Delete uploaded bulk data file AND conditionally all associated DB entries. """
+
+        # Collect these now as they aren't accessible post deletion.
+        visits = self.visits.all() if settings.DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD else None
+
         count, deleted = super().delete(*args, **kwargs)
         if count == 1:
             os.remove(self.meta_data_file.name)
             os.remove(self.spectral_data_file.name)
+
+            if settings.DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD:
+                for visit in visits:
+                    spectral_data = [x for bio_sample in visit.bio_sample.all() for x in bio_sample.spectral_data.all()]
+
+                    tmp_count, tmp_deleted = visit.delete()
+                    count += tmp_count
+                    deleted = dict(Counter(deleted) + Counter(tmp_deleted))
+
+                    # Manually delete spectral_data files as the above visit.delete() happens at the DB layer thus
+                    # not calling ``SpectralData.delete()``.
+                    for data in spectral_data:
+                        try:
+                            SpectralData.objects.get(pk=data.pk)
+                        except SpectralData.DoesNotExist:
+                            # Only delete files where DB entry was successfully deleted.
+                            os.remove(data.data.name)
+
         return count, deleted
 
     def adelete(self, *args, **kwargs):
@@ -215,6 +239,15 @@ class Visit(DatedModel):
                                         validators=[MinValueValidator(0)],
                                         verbose_name="Days observed",
                                         help_text="Applies to all visit observations unless otherwise specified")
+
+    src_file = models.ForeignKey(UploadedFile,
+                                 default=None,
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.SET_NULL,
+                                 related_name="visits",
+                                 verbose_name="Source bulk data file",
+                                 help_text="Visit created from this bulk data file")
 
     @classmethod
     def parse_fields_from_pandas_series(cls, series):

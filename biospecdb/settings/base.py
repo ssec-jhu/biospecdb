@@ -214,6 +214,11 @@ DISABLE_QC_MANAGER = True
 # WARNING! This may give incorrect results, e.g., when retrospectively adding prior visits.
 AUTO_FIND_PREVIOUS_VISIT = False
 
+# When deleting a bulk uploaded file, also delete all of the visit data that it created.
+# Note: This won't delete the patient entry itself, just the visit and all other data related to the visit. This is
+# because there's no way to know whether the patient previously existed even if it had no associated visit.
+DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD = True
+
 # Data Catalog settings:
 
 DATASET_CATALOG_FILE_CLASS = "uploader.exporters.CSVExporter"

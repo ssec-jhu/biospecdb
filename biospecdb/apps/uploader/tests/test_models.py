@@ -525,6 +525,7 @@ class TestUploadedFile:
         assert Visit.objects.count() == 10
 
         count, deleted = bulk_upload.delete()
+
         assert count == 235
         assert sum(deleted.values()) == 235
         assert not Visit.objects.count()

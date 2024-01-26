@@ -138,16 +138,22 @@ class UploadedFile(DatedModel):
         """ Delete uploaded bulk data file AND conditionally all associated DB entries. """
 
         # Collect these now as they aren't accessible post deletion.
-        visits = self.visits.all() if settings.DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD else None
+        visits = list(self.visits.all()) if settings.DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD else None
 
+        # Delete DB entry.
         count, deleted = super().delete(*args, **kwargs)
+
         if count == 1:
+            # Remove bulk uploaded data files.
             os.remove(self.meta_data_file.name)
             os.remove(self.spectral_data_file.name)
 
             if settings.DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD:
+                # Delete all data that was uploaded from bulk data file.
                 for visit in visits:
-                    spectral_data = [x for bio_sample in visit.bio_sample.all() for x in bio_sample.spectral_data.all()]
+                    # Collect these now as they aren't accessible post deletion.
+                    spectral_data = [(x.pk, x.data.name) for bio_sample in visit.bio_sample.all() for x in
+                                     bio_sample.spectral_data.all()]
 
                     tmp_count, tmp_deleted = visit.delete()
                     count += tmp_count
@@ -155,12 +161,12 @@ class UploadedFile(DatedModel):
 
                     # Manually delete spectral_data files as the above visit.delete() happens at the DB layer thus
                     # not calling ``SpectralData.delete()``.
-                    for data in spectral_data:
+                    for pk, filename in spectral_data:
                         try:
-                            SpectralData.objects.get(pk=data.pk)
+                            SpectralData.objects.get(pk=pk)
                         except SpectralData.DoesNotExist:
                             # Only delete files where DB entry was successfully deleted.
-                            os.remove(data.data.name)
+                            os.remove(filename)
 
         return count, deleted
 

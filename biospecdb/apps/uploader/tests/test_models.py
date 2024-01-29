@@ -516,7 +516,7 @@ class TestUploadedFile:
     def test_src_file_tracking(self, mock_data_from_files):
         assert UploadedFile.objects.all()[0].visits.count() == 10
 
-    def test_deletion_and_all_visit_data(self,  monkeypatch, mock_data_from_files):
+    def test_deletion_of_all_visit_data(self,  monkeypatch, mock_data_from_files):
         monkeypatch.setattr(settings, "DELETE_VISITS_WHEN_DELETING_BULK_UPLOAD", True)
 
         bulk_upload = UploadedFile.objects.all()[0]
@@ -526,8 +526,8 @@ class TestUploadedFile:
 
         count, deleted = bulk_upload.delete()
 
-        assert count == 235
-        assert sum(deleted.values()) == 235
+        assert count == 245
+        assert sum(deleted.values()) == 245
         assert not Visit.objects.count()
         assert not BioSample.objects.count()
         assert not SpectralData.objects.count()

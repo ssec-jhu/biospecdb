@@ -1,3 +1,4 @@
+from functools import cache
 from inspect import signature
 
 from django.apps import apps
@@ -294,8 +295,44 @@ class ObservationMixin:
         return qs.filter(visit__patient__center=Center.objects.get(pk=request.user.center.pk))
 
 
+class InlineObservationHandlerMixin:
+    """ Inherit this class when using ObservationInline for inline forms to correctly handle observation instances. """
+
+    @staticmethod
+    @cache
+    def factory():
+        """ Create a custom class for each observable category and return all classes as a list. """
+        return [type(f"{x}ObservationInline",
+                     (ObservationInline,),
+                     dict(verbose_name=x.lower(),
+                          verbose_name_plural=x.lower(),
+                          classes=("collapse",))) for x in Observable.Category]
+
+    def get_inline_instances(self, request, obj=None):
+        if ObservationInline not in self.inlines:
+            return super().get_inline_instances(request, obj=obj)
+
+        # Instantiate other inline instances.
+        inlines = [inline(inline.model, self.admin_site) for inline in self.inlines if inline is not ObservationInline]
+
+        # Instantiate ObservationInline instances.
+        try:
+            user_center = Center.objects.get(pk=request.user.center.pk)
+            query = Q(center=None)  # TODO #225| Q(default=None) | Q(default=user_center)
+
+            for cls in self.factory():
+                for observable in Observable.objects.filter(Q(category__iexact=cls.verbose_name) & query):
+                    inlines.append(cls(ObservationInline, self.admin_site, form=type("NewObservationForm",
+                                                                                     (ObservationInlineForm,),
+                                                                                     {"observable": observable})))
+        except OperationalError:
+            pass
+
+        return inlines
+
+
 class ObservationInlineForm(forms.ModelForm):
-    observables = iter([])
+    observable = None
 
     @staticmethod
     def _get_widget(value_class, choices=()):
@@ -317,28 +354,31 @@ class ObservationInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            observable = next(self.observables)
-            self.fields["observable"].initial = observable
-            self.fields["observable_value"].widget = self._get_widget(observable.value_class,
-                                                                      choices=observable.value_choices)
-            self.fields["observable"].queryset = Observable.objects.filter(name=observable.name)
-        except StopIteration:
-            pass
+
+        if self.observable is not None:
+            self.fields["observable"].initial = self.observable
+            self.fields["observable_value"].widget = self._get_widget(self.observable.value_class,
+                                                                      choices=self.observable.value_choices)
+            self.fields["observable"].queryset = Observable.objects.filter(name=self.observable.name)
 
 
 class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabularInline):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, form=None, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            # Only auto-populate "global" observables, i.e., those not related to a center (center=null).
-            query = Q(center=None)
-            if hasattr(self, "verbose_name"):  # Only Inline admins have verbose names.
-                query &= Q(category=self.verbose_name.upper())
-            kwargs = {"observables": iter(Observable.objects.filter(query))}
-        except OperationalError:
-            kwargs = {}
-        self.form = type("NewObservationForm", (ObservationInlineForm,), kwargs)
+        if form is not None:
+            self.form = form
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     try:
+    #         # Only auto-populate "global" observables, i.e., those not related to a center (center=null).
+    #         query = Q(center=None)
+    #         if hasattr(self, "verbose_name"):  # Only Inline admins have verbose names.
+    #             query &= Q(category=self.verbose_name.upper())
+    #         kwargs = {"observables": iter(Observable.objects.filter(query))}
+    #     except OperationalError:
+    #         kwargs = {}
+    #     self.form = type("NewObservationForm", (ObservationInlineForm,), kwargs)
 
     extra = 0
     model = Observation
@@ -379,11 +419,11 @@ class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabular
 
         return extra
 
-    @classmethod
-    def factory(cls):
-        return [type(f"{x}ObservationInline", (cls,), dict(verbose_name=x.lower(),
-                                                           verbose_name_plural=x.lower(),
-                                                           classes=("collapse",))) for x in Observable.Category]
+    # @classmethod
+    # def factory(cls):
+    #     return [type(f"{x}ObservationInline", (cls,), dict(verbose_name=x.lower(),
+    #                                                        verbose_name_plural=x.lower(),
+    #                                                        classes=("collapse",))) for x in Observable.Category]
 
 
 @admin.register(Observation)
@@ -647,13 +687,13 @@ class VisitAdminMixin:
         return field
 
 
-class VisitInline(VisitAdminMixin, RestrictedByCenterMixin, NestedTabularInline):
+class VisitInline(InlineObservationHandlerMixin, VisitAdminMixin, RestrictedByCenterMixin, NestedTabularInline):
     model = Visit
     extra = 1
     min_num = 0
     show_change_link = True
     fk_name = "patient"
-    inlines = [BioSampleInline, *ObservationInline.factory()]
+    inlines = [BioSampleInline, ObservationInline]
 
     def get_extra(self, request, obj=None, **kwargs):
         # Only display inlines for those that exist, i.e., no expanded extras (if they exist).
@@ -670,8 +710,8 @@ class VisitAdmin(VisitAdminMixin, RestrictedByCenterMixin, NestedModelAdmin):
     list_display = ["patient_id", "visit_count", "gender"]
 
 
-class VisitAdminWithInlines(VisitAdmin):
-    inlines = [BioSampleInline, *ObservationInline.factory()]
+class VisitAdminWithInlines(InlineObservationHandlerMixin, VisitAdmin):
+    inlines = [BioSampleInline, ObservationInline]
 
 
 @admin.register(Patient)

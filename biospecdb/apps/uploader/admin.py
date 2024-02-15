@@ -299,21 +299,36 @@ class InlineObservationHandlerMixin:
     """ Inherit this class when using ObservationInline for inline forms to correctly handle observation instances. """
 
     @staticmethod
-    @cache
+    # @cache
     def factory():
-        """ Create a custom class for each observable category and return all classes as a list. """
+        """ Create a custom class for each observable category and return as a list. """
         return [type(f"{x}ObservationInline",
                      (ObservationInline,),
                      dict(verbose_name=x.lower(),
                           verbose_name_plural=x.lower(),
                           classes=("collapse",))) for x in Observable.Category]
 
-    def get_inline_instances(self, request, obj=None):
-        if ObservationInline not in self.inlines:
-            return super().get_inline_instances(request, obj=obj)
+    def get_inlines(self, request, obj):
+        inlines = super().get_inlines(request, obj=obj)
 
-        # Instantiate other inline instances.
-        inlines = [inline(inline.model, self.admin_site) for inline in self.inlines if inline is not ObservationInline]
+        if ObservationInline not in inlines:
+            return inlines
+
+        # Strip out ObservationInline.
+        inlines = [inline for inline in inlines if inline is not ObservationInline]
+
+        inlines.extend(self.factory())
+
+        return inlines
+
+    def get_inline_instances(self, request, obj=None):
+        inlines = super().get_inline_instances(request, obj=obj)
+
+        if ObservationInline not in self.inlines:
+            return inlines
+
+        # Strip out ObservationInline instances.
+        inlines = [inline for inline in inlines if not isinstance(inline, ObservationInline)]
 
         # Instantiate ObservationInline instances.
         try:
@@ -322,9 +337,9 @@ class InlineObservationHandlerMixin:
 
             for cls in self.factory():
                 for observable in Observable.objects.filter(Q(category__iexact=cls.verbose_name) & query):
-                    inlines.append(cls(ObservationInline, self.admin_site, form=type("NewObservationForm",
-                                                                                     (ObservationInlineForm,),
-                                                                                     {"observable": observable})))
+                    inlines.append(cls(cls.model, self.admin_site, form=type("NewObservationForm",
+                                                                             (ObservationInlineForm,),
+                                                                             {"observable": observable})))
         except OperationalError:
             pass
 

@@ -294,56 +294,64 @@ class ObservationMixin:
             return qs
         return qs.filter(visit__patient__center=Center.objects.get(pk=request.user.center.pk))
 
+from django.forms import inlineformset_factory
+
 
 class InlineObservationHandlerMixin:
     """ Inherit this class when using ObservationInline for inline forms to correctly handle observation instances. """
 
-    @staticmethod
-    # @cache
-    def factory():
-        """ Create a custom class for each observable category and return as a list. """
-        return [type(f"{x}ObservationInline",
-                     (ObservationInline,),
-                     dict(verbose_name=x.lower(),
-                          verbose_name_plural=x.lower(),
-                          classes=("collapse",))) for x in Observable.Category]
-
     def get_inlines(self, request, obj):
+        """ Add an ObservationInline class per Observable.Category. """
         inlines = super().get_inlines(request, obj=obj)
 
+        # Guard against improper use.
         if ObservationInline not in inlines:
             return inlines
 
         # Strip out ObservationInline.
         inlines = [inline for inline in inlines if inline is not ObservationInline]
 
-        inlines.extend(self.factory())
-
+        # Add in ObservationInline class per Observable.Category.
+        inlines.extend([type(f"{x}ObservationInline",
+                             (ObservationInline,),
+                             dict(verbose_name=x.lower(),
+                                  verbose_name_plural=x.lower(),
+                                  classes=("collapse",)))
+                        for x in Observable.Category])
         return inlines
 
-    def get_inline_instances(self, request, obj=None):
-        inlines = super().get_inline_instances(request, obj=obj)
+    # def get_formsets_with_inlines(self, request, obj=None):
+    #     for inline in self.get_inline_instances(request, obj):
+    #         yield inline.get_formset(request, obj), inline
 
-        if ObservationInline not in self.inlines:
-            return inlines
-
-        # Strip out ObservationInline instances.
-        inlines = [inline for inline in inlines if not isinstance(inline, ObservationInline)]
-
-        # Instantiate ObservationInline instances.
-        try:
-            user_center = Center.objects.get(pk=request.user.center.pk)
-            query = Q(center=None)  # TODO #225| Q(default=None) | Q(default=user_center)
-
-            for cls in self.factory():
-                for observable in Observable.objects.filter(Q(category__iexact=cls.verbose_name) & query):
-                    inlines.append(cls(cls.model, self.admin_site, form=type("NewObservationForm",
-                                                                             (ObservationInlineForm,),
-                                                                             {"observable": observable})))
-        except OperationalError:
-            pass
-
-        return inlines
+    # def get_inline_instances(self, request, obj=None):
+    #     inlines = super().get_inline_instances(request, obj=obj)
+    #
+    #     if ObservationInline not in self.inlines:
+    #         return inlines
+    #
+    #     # Strip out ObservationInline instances.
+    #     inlines = [inline for inline in inlines if not isinstance(inline, ObservationInline)]
+    #
+    #     # Instantiate ObservationInline instances.
+    #     try:
+    #         user_center = Center.objects.get(pk=request.user.center.pk)
+    #         query = Q(center=None)  # TODO #225| Q(default=None) | Q(default=user_center)
+    #
+    #         for cls in self.factory():
+    #             inline = cls(self.model, self.admin_site)
+    #             for observable in Observable.objects.filter(Q(category__iexact=cls.verbose_name) & query):
+    #                 ...
+    #             inlines.append(inline)
+    #
+    #
+    #                 # inlines.append(cls(self.model, self.admin_site, form=type("NewObservationForm",
+    #                 #                                                           (ObservationInlineForm,),
+    #                 #                                                           {"observable": observable})))
+    #     except OperationalError:
+    #         pass
+    #
+    #     return inlines
 
 
 class ObservationInlineForm(forms.ModelForm):
@@ -377,11 +385,27 @@ class ObservationInlineForm(forms.ModelForm):
             self.fields["observable"].queryset = Observable.objects.filter(name=self.observable.name)
 
 
+from django.forms.models import BaseInlineFormSet
+# class ObservationInlineFormSet(BaseInlineFormSet):
+#     category = None
+
+
 class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabularInline):
     def __init__(self, *args, form=None, **kwargs):
         super().__init__(*args, **kwargs)
         if form is not None:
             self.form = form
+
+    def get_formset(self, request, obj=None, **kwargs):
+        user_center = Center.objects.get(pk=request.user.center.pk)
+        queryset = Q(category__iexact=self.verbose_name) & (Q(center=None) | Q(center=user_center)) #| Q(default=None) | Q(default=user_centre)
+
+        kwargs["formset"] = type("ObservationInlineFormSet",
+                                 (BaseInlineFormSet,),
+                                 dict(category=self.verbose_name,
+                                      get_queryset=lambda x: Observable.objects.filter(queryset)))
+        # kwargs["form"] = type("NewObservationForm", (ObservationInlineForm,), {"observable": observable})
+        return super().get_formset(request, obj=obj, **kwargs)
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
@@ -394,15 +418,15 @@ class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabular
     #     except OperationalError:
     #         kwargs = {}
     #     self.form = type("NewObservationForm", (ObservationInlineForm,), kwargs)
-
+    # form = ObservationInlineForm
     extra = 0
     model = Observation
-    show_change_link = True
+    show_change_link = False
     fk_name = "visit"
 
     # Override fieldsets from ObservationMixin as fields & fieldsets cannot both be set.
     fieldsets = None
-    fields = ["observable", "observable_value"]
+    fields = ["observable_value"]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """ Limit observable to user's center (super's functionality) and admin category. """
@@ -419,26 +443,20 @@ class ObservationInline(ObservationMixin, RestrictedByCenterMixin, NestedTabular
             (Q(visit__patient__center=center) | Q(visit__patient__center=None))
         return qs.filter(query)
 
-    def get_extra(self, request, obj=None, **kwargs):
-        """ Only list extra inline forms when no data exists, i.e., new patient form. """
-        if obj and obj.pk and obj.observation.count():
-            # Only display inlines for those that exist, i.e., no extras (when self.extra=0).
-            extra = self.extra
-        else:
-            # Note: Calling ``len(self.formfield_for_foreignkey(db_field, request)`` would be better, however, it's not
-            # clear how to correctly pass ``db_field``. The following was copied from
-            # ``RestrictedByCenterMixin.formfield_for_foreignkey``.
-            center = Center.objects.get(pk=request.user.center.pk)
-            query = Q(category=self.verbose_name.upper()) & (Q(center=center) | Q(center=None))
-            extra = Observable.objects.filter(query).count()
-
-        return extra
-
-    # @classmethod
-    # def factory(cls):
-    #     return [type(f"{x}ObservationInline", (cls,), dict(verbose_name=x.lower(),
-    #                                                        verbose_name_plural=x.lower(),
-    #                                                        classes=("collapse",))) for x in Observable.Category]
+    # def get_extra(self, request, obj=None, **kwargs):
+    #     """ Only list extra inline forms when no data exists, i.e., new patient form. """
+    #     if obj and obj.pk and obj.observation.count():
+    #         # Only display inlines for those that exist, i.e., no extras (when self.extra=0).
+    #         extra = self.extra
+    #     else:
+    #         # Note: Calling ``len(self.formfield_for_foreignkey(db_field, request)`` would be better, however, it's not
+    #         # clear how to correctly pass ``db_field``. The following was copied from
+    #         # ``RestrictedByCenterMixin.formfield_for_foreignkey``.
+    #         center = Center.objects.get(pk=request.user.center.pk)
+    #         query = Q(category__iexact=self.verbose_name) & (Q(center=center) | Q(center=None))  # TODO #225| Q(default=None) | Q(default=center)
+    #         extra = Observable.objects.filter(query).count()
+    #
+    #     return extra
 
 
 @admin.register(Observation)

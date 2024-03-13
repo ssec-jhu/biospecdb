@@ -2,5 +2,5 @@
 
 sphinx==6.2.1
 sphinx_rtd_theme==2.0.0
-sphinx-automodapi==0.16.0
+sphinx-automodapi==0.17.0
 nbsphinx==0.9.3

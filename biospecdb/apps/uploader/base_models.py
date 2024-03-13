@@ -79,6 +79,16 @@ class SqlView:
 
     # TODO: Add functionality to auto create own view if doesn't already exist.
 
+    @staticmethod
+    def _create_field_str_list(prefix, model, extra_excluded_field_names=None):
+        excluded_field_names = ["created_at", "updated_at"]
+        if extra_excluded_field_names:
+            excluded_field_names.extend(extra_excluded_field_names)
+        excluded_field_names = [x.lower() for x in excluded_field_names]
+        return ''.join([f'{prefix}.{field.name} as {model.__name__.lower()}_{field.name}, '
+                        for field in model._meta.fields
+                        if (not field.is_relation and field.name.lower() not in excluded_field_names)])
+
     @classmethod
     def sql(cls):
         """ Returns the SQL string and an optional list of params used in string. """

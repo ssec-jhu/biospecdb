@@ -15,3 +15,5 @@ psycopg[binary,pool]==3.1.18
 pyyaml==6.0.1
 xlsxwriter==3.2.0
 whitenoise==6.6.0
+
+matplotlib<3.9.0  # See https://github.com/DeepLabCut/DeepLabCut/issues/2581
